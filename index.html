@@ -68,9 +68,38 @@
     
     .fade-in { animation: fadeIn 0.3s ease; }
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
+    
+    /* Video player custom styles */
+    video::-webkit-media-controls-panel {
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%, transparent 50%, rgba(0,0,0,0.4) 100%);
+    }
+    
+    video::-webkit-media-controls-play-button,
+    video::-webkit-media-controls-mute-button,
+    video::-webkit-media-controls-fullscreen-button {
+      filter: brightness(1.2);
+    }
+    
+    video::-webkit-media-controls-current-time-display,
+    video::-webkit-media-controls-time-remaining-display {
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+    
+    /* Glow effect */
+    .glow-primary {
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.3), 0 0 40px rgba(236, 72, 153, 0.1);
+    }
+    
+    /* Pulse animation for playing indicator */
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    .animate-pulse { animation: pulse-dot 1.5s ease-in-out infinite; }
   </style>
 </head>
 <body>
@@ -505,45 +534,112 @@
                   <span>Kembali</span>
                 </button>
 
-                {/* Video Player */}
+                {/* Video Player - DramaBox Style */}
                 {showVideo && videoUrl && (
-                  <div className="mb-6">
-                    <div className="flex flex-col lg:flex-row gap-4">
-                      {/* Video */}
-                      <div className="lg:w-auto flex-shrink-0">
-                        <div className="bg-black rounded-xl overflow-hidden max-w-sm mx-auto lg:mx-0">
-                          <video
-                            key={videoUrl}
-                            src={videoUrl}
-                            controls
-                            autoPlay
-                            onEnded={playNextEpisode}
-                            className="w-full aspect-[9/16]"
-                          />
+                  <div className="mb-6 fade-in">
+                    {/* Video Container - Phone Style */}
+                    <div className="flex flex-col lg:flex-row gap-6">
+                      {/* Left Side - Video Player */}
+                      <div className="flex flex-col items-center lg:items-start">
+                        {/* Phone Frame Video Player */}
+                        <div className="relative w-full max-w-[360px] mx-auto lg:mx-0">
+                          {/* Video Frame */}
+                          <div className="relative bg-gradient-to-b from-dark-700 to-dark-800 rounded-[2rem] p-2 shadow-2xl">
+                            {/* Inner Frame */}
+                            <div className="relative bg-black rounded-[1.5rem] overflow-hidden">
+                              {/* Video */}
+                              <video
+                                key={videoUrl}
+                                src={videoUrl}
+                                controls
+                                autoPlay
+                                onEnded={playNextEpisode}
+                                className="w-full aspect-[9/16] object-contain bg-black"
+                                playsInline
+                              />
+                              
+                              {/* Episode Overlay Badge */}
+                              <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                                <span className="text-xs font-medium">EP {currentEpisodeIndex + 1}</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Decorative Elements */}
+                          <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-purple-500/20 to-primary/20 rounded-[2.5rem] -z-10 blur-xl opacity-50"></div>
                         </div>
-                        <p className="text-center lg:text-left mt-2 text-sm text-gray-400">
-                          Episode {currentEpisodeIndex + 1} dari {episodes.length}
-                        </p>
+                        
+                        {/* Episode Navigation Buttons */}
+                        <div className="flex items-center justify-center gap-3 mt-4 w-full max-w-[360px]">
+                          <button
+                            onClick={() => currentEpisodeIndex > 0 && playEpisode(episodes[currentEpisodeIndex - 1], currentEpisodeIndex - 1)}
+                            disabled={currentEpisodeIndex === 0}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-dark-700 hover:bg-dark-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl transition-all"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="m15 18-6-6 6-6"/>
+                            </svg>
+                            <span className="text-sm font-medium">Prev</span>
+                          </button>
+                          
+                          <div className="px-4 py-3 bg-dark-800 rounded-xl text-center min-w-[100px]">
+                            <span className="text-xs text-gray-400">Episode</span>
+                            <p className="text-lg font-bold text-primary">{currentEpisodeIndex + 1} <span className="text-gray-500 text-sm font-normal">/ {episodes.length}</span></p>
+                          </div>
+                          
+                          <button
+                            onClick={() => currentEpisodeIndex < episodes.length - 1 && playEpisode(episodes[currentEpisodeIndex + 1], currentEpisodeIndex + 1)}
+                            disabled={currentEpisodeIndex >= episodes.length - 1}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-dark-700 hover:bg-dark-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl transition-all"
+                          >
+                            <span className="text-sm font-medium">Next</span>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                          </button>
+                        </div>
+                        
+                        {/* Drama Title */}
+                        <div className="mt-4 w-full max-w-[360px] text-center lg:text-left">
+                          <h2 className="font-bold text-lg line-clamp-1">{getDramaTitle(selectedDrama)}</h2>
+                          <p className="text-sm text-gray-400 mt-1">Sedang memutar Episode {currentEpisodeIndex + 1}</p>
+                        </div>
                       </div>
 
-                      {/* Episode list beside video */}
+                      {/* Right Side - Episode List */}
                       {episodes.length > 0 && (
-                        <div className="flex-1 bg-dark-800 rounded-xl p-4 max-h-[600px] overflow-y-auto">
-                          <h3 className="font-semibold mb-3">Daftar Episode</h3>
-                          <div className="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-6 gap-2">
-                            {episodes.map((ep, i) => (
-                              <button
-                                key={i}
-                                onClick={() => playEpisode(ep, ep.chapterIndex)}
-                                className={`aspect-square rounded-lg text-sm font-medium transition-all ${
-                                  currentEpisodeIndex === ep.chapterIndex
-                                    ? 'bg-primary text-white'
-                                    : 'bg-dark-600 hover:bg-dark-500'
-                                }`}
-                              >
-                                {i + 1}
-                              </button>
-                            ))}
+                        <div className="flex-1 bg-dark-800 rounded-2xl overflow-hidden">
+                          {/* Header */}
+                          <div className="sticky top-0 bg-dark-800 border-b border-dark-700 px-4 py-3 flex items-center justify-between">
+                            <h3 className="font-semibold flex items-center gap-2">
+                              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/>
+                              </svg>
+                              Daftar Episode
+                            </h3>
+                            <span className="text-xs text-gray-400 bg-dark-700 px-2 py-1 rounded-full">{episodes.length} Episode</span>
+                          </div>
+                          
+                          {/* Episode Grid */}
+                          <div className="p-4 max-h-[500px] lg:max-h-[600px] overflow-y-auto">
+                            <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+                              {episodes.map((ep, i) => (
+                                <button
+                                  key={i}
+                                  onClick={() => playEpisode(ep, ep.chapterIndex)}
+                                  className={`relative aspect-square rounded-xl text-sm font-bold transition-all hover:scale-105 ${
+                                    currentEpisodeIndex === ep.chapterIndex
+                                      ? 'bg-gradient-to-br from-primary to-pink-600 text-white shadow-lg shadow-primary/30'
+                                      : 'bg-dark-600 hover:bg-dark-500 text-gray-300'
+                                  }`}
+                                >
+                                  {i + 1}
+                                  {currentEpisodeIndex === ep.chapterIndex && (
+                                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-dark-800 animate-pulse"></span>
+                                  )}
+                                </button>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       )}
@@ -551,69 +647,99 @@
                   </div>
                 )}
 
-                {/* Drama Info - Show when video not playing */}
+                {/* Drama Info - Show when video not playing - DramaBox Style */}
                 {!showVideo && (
-                  <div className="bg-dark-800 rounded-xl overflow-hidden mb-6">
-                    <div className="flex flex-col sm:flex-row gap-4 p-4">
-                      {/* Cover */}
-                      <div className="w-32 sm:w-40 flex-shrink-0 mx-auto sm:mx-0">
-                        <img
-                          src={getDramaCover(selectedDrama)}
-                          alt={getDramaTitle(selectedDrama)}
-                          className="w-full rounded-lg aspect-[2/3] object-cover"
-                        />
-                      </div>
-
-                      {/* Info */}
-                      <div className="flex-1 text-center sm:text-left">
-                        <h1 className="text-xl md:text-2xl font-bold mb-2">
-                          {getDramaTitle(selectedDrama)}
-                        </h1>
-
-                        {/* Meta */}
-                        <div className="flex items-center justify-center sm:justify-start gap-3 text-sm text-gray-400 mb-3">
-                          {selectedDrama?.score && (
-                            <span className="flex items-center gap-1 text-primary">
-                              <StarIcon />
-                              {selectedDrama.score}
-                            </span>
-                          )}
-                          {selectedDrama?.chapterCount && (
-                            <span>{selectedDrama.chapterCount} Episode</span>
-                          )}
-                          {selectedDrama?.playCount && (
-                            <span className="flex items-center gap-1">
-                              <EyeIcon />
-                              {selectedDrama.playCount}
-                            </span>
-                          )}
+                  <div className="bg-dark-800 rounded-2xl overflow-hidden mb-6 fade-in">
+                    {/* Background Banner */}
+                    <div className="relative h-32 sm:h-48 overflow-hidden">
+                      <img
+                        src={getDramaCover(selectedDrama)}
+                        alt=""
+                        className="w-full h-full object-cover blur-xl scale-110 opacity-30"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-dark-800/50 to-dark-800"></div>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="relative px-4 sm:px-6 pb-6 -mt-20 sm:-mt-24">
+                      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                        {/* Cover */}
+                        <div className="w-28 sm:w-36 flex-shrink-0 mx-auto sm:mx-0">
+                          <div className="relative">
+                            <img
+                              src={getDramaCover(selectedDrama)}
+                              alt={getDramaTitle(selectedDrama)}
+                              className="w-full rounded-xl aspect-[2/3] object-cover shadow-2xl ring-2 ring-dark-600"
+                            />
+                            {selectedDrama?.score && (
+                              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-pink-600 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+                                <StarIcon />
+                                {selectedDrama.score}
+                              </div>
+                            )}
+                          </div>
                         </div>
 
-                        {/* Tags */}
-                        {getDramaTags(selectedDrama).length > 0 && (
-                          <div className="flex flex-wrap justify-center sm:justify-start gap-2 mb-4">
-                            {getDramaTags(selectedDrama).map((tag, i) => (
-                              <span key={i} className="px-2 py-1 bg-dark-600 rounded text-xs">
-                                {tag}
+                        {/* Info */}
+                        <div className="flex-1 text-center sm:text-left pt-4 sm:pt-8">
+                          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 leading-tight">
+                            {getDramaTitle(selectedDrama)}
+                          </h1>
+
+                          {/* Meta Info */}
+                          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-sm text-gray-400 mb-4">
+                            {selectedDrama?.chapterCount && (
+                              <span className="flex items-center gap-1.5 bg-dark-700 px-3 py-1.5 rounded-full">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                  <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/>
+                                </svg>
+                                {selectedDrama.chapterCount} Episode
                               </span>
-                            ))}
+                            )}
+                            {selectedDrama?.playCount && (
+                              <span className="flex items-center gap-1.5 bg-dark-700 px-3 py-1.5 rounded-full">
+                                <EyeIcon />
+                                {selectedDrama.playCount} views
+                              </span>
+                            )}
                           </div>
-                        )}
 
-                        {/* Description */}
-                        <p className="text-sm text-gray-400 line-clamp-3 mb-4">
-                          {getDramaDesc(selectedDrama) || 'Tidak ada deskripsi'}
-                        </p>
+                          {/* Tags */}
+                          {getDramaTags(selectedDrama).length > 0 && (
+                            <div className="flex flex-wrap justify-center sm:justify-start gap-2 mb-4">
+                              {getDramaTags(selectedDrama).map((tag, i) => (
+                                <span key={i} className="px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-full text-xs font-medium">
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
 
-                        {/* Play button */}
-                        <button
-                          onClick={() => episodes.length > 0 && playEpisode(episodes[0], 0)}
-                          disabled={episodes.length === 0 || loading}
-                          className="w-full sm:w-auto px-8 py-3 bg-primary hover:bg-pink-600 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
-                        >
-                          <PlayIcon />
-                          Tonton Sekarang
-                        </button>
+                          {/* Description */}
+                          <p className="text-sm text-gray-400 line-clamp-3 mb-5 leading-relaxed">
+                            {getDramaDesc(selectedDrama) || 'Tidak ada deskripsi tersedia untuk drama ini.'}
+                          </p>
+
+                          {/* Action Buttons */}
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <button
+                              onClick={() => episodes.length > 0 && playEpisode(episodes[0], 0)}
+                              disabled={episodes.length === 0 || loading}
+                              className="flex-1 sm:flex-none px-8 py-3.5 bg-gradient-to-r from-primary to-pink-600 hover:from-pink-600 hover:to-primary rounded-xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50 shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.02]"
+                            >
+                              <PlayIcon />
+                              Tonton Sekarang
+                            </button>
+                            <button
+                              onClick={() => episodes.length > 0 && playEpisode(episodes[episodes.length - 1], episodes.length - 1)}
+                              disabled={episodes.length === 0 || loading}
+                              className="flex-1 sm:flex-none px-6 py-3.5 bg-dark-600 hover:bg-dark-500 rounded-xl font-medium flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                            >
+                              <ClockIcon />
+                              Episode Terakhir
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -621,22 +747,35 @@
 
                 {/* Episodes Grid - Show when video not playing */}
                 {!showVideo && !loading && episodes.length > 0 && (
-                  <div className="bg-dark-800 rounded-xl p-4">
-                    <h3 className="font-semibold mb-4">Episode ({episodes.length})</h3>
-                    <div className="grid grid-cols-8 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 gap-2">
-                      {episodes.map((ep, i) => (
-                        <button
-                          key={i}
-                          onClick={() => playEpisode(ep, ep.chapterIndex)}
-                          className={`aspect-square rounded-lg text-sm font-medium transition-all ${
-                            currentEpisodeIndex === ep.chapterIndex
-                              ? 'bg-primary text-white'
-                              : 'bg-dark-600 hover:bg-dark-500'
-                          }`}
-                        >
-                          {i + 1}
-                        </button>
-                      ))}
+                  <div className="bg-dark-800 rounded-2xl overflow-hidden fade-in">
+                    {/* Header */}
+                    <div className="bg-dark-700/50 px-4 py-3 flex items-center justify-between border-b border-dark-700">
+                      <h3 className="font-semibold flex items-center gap-2">
+                        <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/>
+                        </svg>
+                        Pilih Episode
+                      </h3>
+                      <span className="text-xs text-gray-400 bg-dark-600 px-3 py-1 rounded-full">Total {episodes.length} Episode</span>
+                    </div>
+                    
+                    {/* Grid */}
+                    <div className="p-4">
+                      <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 xl:grid-cols-14 gap-2">
+                        {episodes.map((ep, i) => (
+                          <button
+                            key={i}
+                            onClick={() => playEpisode(ep, ep.chapterIndex)}
+                            className={`aspect-square rounded-xl text-sm font-bold transition-all hover:scale-105 ${
+                              currentEpisodeIndex === ep.chapterIndex
+                                ? 'bg-gradient-to-br from-primary to-pink-600 text-white shadow-lg shadow-primary/30'
+                                : 'bg-dark-600 hover:bg-dark-500 text-gray-300'
+                            }`}
+                          >
+                            {i + 1}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}

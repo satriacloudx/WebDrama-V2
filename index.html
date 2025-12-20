@@ -19,6 +19,7 @@
           colors: {
             primary: '#ec4899',
             dark: {
+              950: '#050505',
               900: '#0a0a0a',
               800: '#121212',
               700: '#1a1a1a',
@@ -72,9 +73,29 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Video player custom styles */
+    /* Video Player Container */
+    .video-player-container {
+      background: linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+    
+    /* Video wrapper with phone-like frame */
+    .video-wrapper {
+      position: relative;
+      background: #000;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 
+        0 0 0 2px rgba(255,255,255,0.1),
+        0 20px 40px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    
+    /* Custom video controls styling */
     video::-webkit-media-controls-panel {
-      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%, transparent 50%, rgba(0,0,0,0.4) 100%);
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%, transparent 50%, rgba(0,0,0,0.5) 100%);
     }
     
     video::-webkit-media-controls-play-button,
@@ -89,17 +110,77 @@
       text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
     
-    /* Glow effect */
-    .glow-primary {
-      box-shadow: 0 0 20px rgba(236, 72, 153, 0.3), 0 0 40px rgba(236, 72, 153, 0.1);
+    /* Episode list scrollbar */
+    .episode-list::-webkit-scrollbar { width: 4px; }
+    .episode-list::-webkit-scrollbar-track { background: transparent; }
+    .episode-list::-webkit-scrollbar-thumb { background: #ec4899; border-radius: 2px; }
+    
+    /* Episode button styles */
+    .ep-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      border-radius: 12px;
+      transition: all 0.2s ease;
     }
     
-    /* Pulse animation for playing indicator */
+    .ep-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    .ep-btn.active {
+      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+    }
+    
+    .ep-btn.active::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 10px;
+      height: 10px;
+      background: #22c55e;
+      border-radius: 50%;
+      border: 2px solid #121212;
+      animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+    
     @keyframes pulse-dot {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.2); }
+      50% { opacity: 0.7; transform: scale(1.2); }
     }
-    .animate-pulse { animation: pulse-dot 1.5s ease-in-out infinite; }
+    
+    /* Glow effect */
+    .glow-primary {
+      box-shadow: 0 0 30px rgba(236, 72, 153, 0.3), 0 0 60px rgba(236, 72, 153, 0.1);
+    }
+    
+    /* Now Playing indicator */
+    .now-playing {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .now-playing .bar {
+      width: 3px;
+      height: 12px;
+      background: #ec4899;
+      border-radius: 2px;
+      animation: sound-bar 0.5s ease infinite alternate;
+    }
+    
+    .now-playing .bar:nth-child(2) { animation-delay: 0.1s; }
+    .now-playing .bar:nth-child(3) { animation-delay: 0.2s; }
+    .now-playing .bar:nth-child(4) { animation-delay: 0.3s; }
+    
+    @keyframes sound-bar {
+      0% { height: 4px; }
+      100% { height: 16px; }
+    }
   </style>
 </head>
 <body>
@@ -113,14 +194,19 @@
     
     // Icons
     const SearchIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>;
-    const PlayIcon = () => <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>;
+    const PlayIcon = ({ size = 20 }) => <svg width={size} height={size} fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>;
+    const PauseIcon = () => <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>;
     const HomeIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>;
     const TrendingIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>;
     const ClockIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>;
     const BackIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>;
+    const ForwardIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>;
     const StarIcon = () => <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>;
     const XIcon = () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>;
     const EyeIcon = () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>;
+    const ListIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>;
+    const SkipBackIcon = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>;
+    const SkipForwardIcon = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>;
     
     const App = () => {
       const [activeTab, setActiveTab] = useState('home');
@@ -139,13 +225,25 @@
       const [loading, setLoading] = useState(false);
       const [error, setError] = useState('');
       const [showVideo, setShowVideo] = useState(false);
-      const searchRef = useRef(null);
+      const [isPlaying, setIsPlaying] = useState(false);
+      const videoRef = useRef(null);
+      const episodeListRef = useRef(null);
 
       useEffect(() => {
         if (activeTab === 'home') loadHomeData();
         else if (activeTab === 'popular') { setLoading(true); fetchPopular().then(() => setLoading(false)); }
         else if (activeTab === 'new') { setLoading(true); fetchNewReleases().then(() => setLoading(false)); }
       }, [activeTab]);
+
+      // Auto scroll to active episode
+      useEffect(() => {
+        if (episodeListRef.current && showVideo) {
+          const activeBtn = episodeListRef.current.querySelector('.ep-btn.active');
+          if (activeBtn) {
+            activeBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+      }, [currentEpisodeIndex, showVideo]);
 
       const loadHomeData = async () => {
         setLoading(true);
@@ -272,7 +370,12 @@
         if (nextIndex < episodes.length) playEpisode(episodes[nextIndex], nextIndex);
       };
 
-      // Drama Card - Clean Design like DramaBox
+      const playPrevEpisode = () => {
+        const prevIndex = currentEpisodeIndex - 1;
+        if (prevIndex >= 0) playEpisode(episodes[prevIndex], prevIndex);
+      };
+
+      // Drama Card
       const DramaCard = ({ drama, rank }) => (
         <div onClick={() => selectDrama(drama)} className="card-hover cursor-pointer group">
           <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-dark-700">
@@ -284,14 +387,12 @@
               </div>
             )}
             
-            {/* Overlay on hover */}
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
                 <PlayIcon />
               </div>
             </div>
             
-            {/* Score badge */}
             {drama?.score && (
               <div className="absolute top-2 left-2 bg-primary px-1.5 py-0.5 rounded text-xs font-semibold flex items-center gap-0.5">
                 <StarIcon />
@@ -299,14 +400,12 @@
               </div>
             )}
             
-            {/* Rank badge */}
             {rank !== undefined && rank < 10 && (
               <div className="absolute top-2 right-2 w-6 h-6 bg-black/80 rounded flex items-center justify-center text-xs font-bold">
                 {rank + 1}
               </div>
             )}
             
-            {/* Episode count */}
             {drama?.chapterCount && (
               <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs">
                 {drama.chapterCount} EP
@@ -358,14 +457,156 @@
         </section>
       );
 
+      // Video Player Component - DramaBox Style
+      const VideoPlayer = () => (
+        <div className="fade-in">
+          {/* Player Container */}
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+            
+            {/* Left Side - Video Player */}
+            <div className="flex flex-col items-center w-full lg:w-auto">
+              {/* Video Container */}
+              <div className="video-player-container w-full max-w-[400px] p-3 sm:p-4">
+                {/* Now Playing Header */}
+                <div className="flex items-center justify-between mb-3 px-1">
+                  <div className="flex items-center gap-3">
+                    <div className="now-playing">
+                      <div className="bar"></div>
+                      <div className="bar"></div>
+                      <div className="bar"></div>
+                      <div className="bar"></div>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400">Sedang Diputar</p>
+                      <p className="text-sm font-semibold text-primary">Episode {currentEpisodeIndex + 1}</p>
+                    </div>
+                  </div>
+                  <span className="text-xs text-gray-500 bg-dark-700 px-2 py-1 rounded-full">
+                    {currentEpisodeIndex + 1} / {episodes.length}
+                  </span>
+                </div>
+                
+                {/* Video Wrapper */}
+                <div className="video-wrapper">
+                  <video
+                    ref={videoRef}
+                    key={videoUrl}
+                    src={videoUrl}
+                    controls
+                    autoPlay
+                    playsInline
+                    onEnded={playNextEpisode}
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                    className="w-full aspect-[9/16] object-contain bg-black"
+                  />
+                </div>
+                
+                {/* Episode Controls */}
+                <div className="flex items-center justify-between mt-4 gap-2">
+                  <button
+                    onClick={playPrevEpisode}
+                    disabled={currentEpisodeIndex === 0}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 bg-dark-700 hover:bg-dark-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl transition-all"
+                  >
+                    <SkipBackIcon />
+                    <span className="text-sm font-medium hidden sm:inline">Sebelumnya</span>
+                  </button>
+                  
+                  <div className="flex-shrink-0 px-4 py-2 bg-dark-800 rounded-xl text-center">
+                    <span className="text-2xl font-bold text-primary">{currentEpisodeIndex + 1}</span>
+                  </div>
+                  
+                  <button
+                    onClick={playNextEpisode}
+                    disabled={currentEpisodeIndex >= episodes.length - 1}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 bg-dark-700 hover:bg-dark-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl transition-all"
+                  >
+                    <span className="text-sm font-medium hidden sm:inline">Selanjutnya</span>
+                    <SkipForwardIcon />
+                  </button>
+                </div>
+                
+                {/* Drama Info */}
+                <div className="mt-4 pt-4 border-t border-dark-700">
+                  <h2 className="font-bold text-base line-clamp-1">{getDramaTitle(selectedDrama)}</h2>
+                  <p className="text-xs text-gray-500 mt-1 line-clamp-2">{getDramaDesc(selectedDrama)}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side - Episode List Panel */}
+            <div className="flex-1 bg-dark-800 rounded-2xl overflow-hidden flex flex-col min-h-[400px] lg:min-h-[600px] lg:max-h-[700px]">
+              {/* Panel Header */}
+              <div className="flex-shrink-0 bg-gradient-to-r from-dark-700 to-dark-800 px-4 py-4 border-b border-dark-700">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                      <ListIcon />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-base">Daftar Episode</h3>
+                      <p className="text-xs text-gray-400">Pilih episode untuk ditonton</p>
+                    </div>
+                  </div>
+                  <div className="bg-primary/20 text-primary px-3 py-1.5 rounded-full">
+                    <span className="text-sm font-bold">{episodes.length}</span>
+                    <span className="text-xs ml-1">Episode</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Episode Grid */}
+              <div ref={episodeListRef} className="flex-1 overflow-y-auto episode-list p-4">
+                <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+                  {episodes.map((ep, i) => (
+                    <button
+                      key={i}
+                      onClick={() => playEpisode(ep, ep.chapterIndex)}
+                      className={`ep-btn aspect-square text-sm ${
+                        currentEpisodeIndex === ep.chapterIndex
+                          ? 'active text-white'
+                          : 'bg-dark-600 hover:bg-dark-500 text-gray-300'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Quick Jump */}
+              <div className="flex-shrink-0 bg-dark-700/50 px-4 py-3 border-t border-dark-700">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-400">Lompat ke:</span>
+                  <div className="flex gap-1 flex-wrap">
+                    {[1, Math.floor(episodes.length / 4), Math.floor(episodes.length / 2), Math.floor(episodes.length * 3 / 4), episodes.length].filter((v, i, a) => a.indexOf(v) === i && v > 0).map(ep => (
+                      <button
+                        key={ep}
+                        onClick={() => playEpisode(episodes[ep - 1], ep - 1)}
+                        className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+                          currentEpisodeIndex === ep - 1
+                            ? 'bg-primary text-white'
+                            : 'bg-dark-600 hover:bg-dark-500 text-gray-300'
+                        }`}
+                      >
+                        EP {ep}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
       return (
         <div className="min-h-screen bg-dark-900">
           {/* Header */}
           <header className="sticky top-0 z-50 bg-dark-900/95 backdrop-blur border-b border-dark-700">
             <div className="max-w-7xl mx-auto px-4">
-              {/* Top bar */}
               <div className="flex items-center justify-between h-14 md:h-16 gap-4">
-                {/* Logo */}
                 <div
                   onClick={() => { setActiveTab('home'); setPreviousTab('home'); setSelectedDrama(null); setShowVideo(false); }}
                   className="flex items-center gap-2 cursor-pointer flex-shrink-0"
@@ -376,8 +617,7 @@
                   <span className="text-lg font-bold hidden sm:block">DSeriesHub</span>
                 </div>
 
-                {/* Search */}
-                <div className="flex-1 max-w-lg relative" ref={searchRef}>
+                <div className="flex-1 max-w-lg relative">
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                       <SearchIcon />
@@ -402,7 +642,6 @@
                     )}
                   </div>
                   
-                  {/* Suggestions */}
                   {showSuggestions && searchSuggestions.length > 0 && (
                     <div className="absolute top-full mt-2 w-full bg-dark-800 border border-dark-600 rounded-lg shadow-xl overflow-hidden z-50">
                       {searchSuggestions.slice(0, 6).map((s, i) => (
@@ -420,7 +659,6 @@
                 </div>
               </div>
 
-              {/* Navigation */}
               <nav className="flex gap-1 overflow-x-auto hide-scrollbar -mb-px">
                 {[
                   { id: 'home', label: 'Beranda', icon: <HomeIcon /> },
@@ -446,14 +684,12 @@
 
           {/* Main Content */}
           <main className="max-w-7xl mx-auto px-4 py-6">
-            {/* Error */}
             {error && (
               <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm fade-in">
                 {error}
               </div>
             )}
 
-            {/* Loading */}
             {loading && !selectedDrama && <Skeleton />}
 
             {/* Home */}
@@ -528,129 +764,17 @@
             {/* Detail Page */}
             {activeTab === 'detail' && selectedDrama && (
               <div className="fade-in">
-                {/* Back button */}
                 <button onClick={goBack} className="flex items-center gap-1 text-gray-400 hover:text-white mb-4 transition-colors">
                   <BackIcon />
                   <span>Kembali</span>
                 </button>
 
-                {/* Video Player - DramaBox Style */}
-                {showVideo && videoUrl && (
-                  <div className="mb-6 fade-in">
-                    {/* Video Container - Phone Style */}
-                    <div className="flex flex-col lg:flex-row gap-6">
-                      {/* Left Side - Video Player */}
-                      <div className="flex flex-col items-center lg:items-start">
-                        {/* Phone Frame Video Player */}
-                        <div className="relative w-full max-w-[360px] mx-auto lg:mx-0">
-                          {/* Video Frame */}
-                          <div className="relative bg-gradient-to-b from-dark-700 to-dark-800 rounded-[2rem] p-2 shadow-2xl">
-                            {/* Inner Frame */}
-                            <div className="relative bg-black rounded-[1.5rem] overflow-hidden">
-                              {/* Video */}
-                              <video
-                                key={videoUrl}
-                                src={videoUrl}
-                                controls
-                                autoPlay
-                                onEnded={playNextEpisode}
-                                className="w-full aspect-[9/16] object-contain bg-black"
-                                playsInline
-                              />
-                              
-                              {/* Episode Overlay Badge */}
-                              <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                                <span className="text-xs font-medium">EP {currentEpisodeIndex + 1}</span>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {/* Decorative Elements */}
-                          <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-purple-500/20 to-primary/20 rounded-[2.5rem] -z-10 blur-xl opacity-50"></div>
-                        </div>
-                        
-                        {/* Episode Navigation Buttons */}
-                        <div className="flex items-center justify-center gap-3 mt-4 w-full max-w-[360px]">
-                          <button
-                            onClick={() => currentEpisodeIndex > 0 && playEpisode(episodes[currentEpisodeIndex - 1], currentEpisodeIndex - 1)}
-                            disabled={currentEpisodeIndex === 0}
-                            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-dark-700 hover:bg-dark-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl transition-all"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path d="m15 18-6-6 6-6"/>
-                            </svg>
-                            <span className="text-sm font-medium">Prev</span>
-                          </button>
-                          
-                          <div className="px-4 py-3 bg-dark-800 rounded-xl text-center min-w-[100px]">
-                            <span className="text-xs text-gray-400">Episode</span>
-                            <p className="text-lg font-bold text-primary">{currentEpisodeIndex + 1} <span className="text-gray-500 text-sm font-normal">/ {episodes.length}</span></p>
-                          </div>
-                          
-                          <button
-                            onClick={() => currentEpisodeIndex < episodes.length - 1 && playEpisode(episodes[currentEpisodeIndex + 1], currentEpisodeIndex + 1)}
-                            disabled={currentEpisodeIndex >= episodes.length - 1}
-                            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-dark-700 hover:bg-dark-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl transition-all"
-                          >
-                            <span className="text-sm font-medium">Next</span>
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path d="m9 18 6-6-6-6"/>
-                            </svg>
-                          </button>
-                        </div>
-                        
-                        {/* Drama Title */}
-                        <div className="mt-4 w-full max-w-[360px] text-center lg:text-left">
-                          <h2 className="font-bold text-lg line-clamp-1">{getDramaTitle(selectedDrama)}</h2>
-                          <p className="text-sm text-gray-400 mt-1">Sedang memutar Episode {currentEpisodeIndex + 1}</p>
-                        </div>
-                      </div>
+                {/* Video Player */}
+                {showVideo && videoUrl && <VideoPlayer />}
 
-                      {/* Right Side - Episode List */}
-                      {episodes.length > 0 && (
-                        <div className="flex-1 bg-dark-800 rounded-2xl overflow-hidden">
-                          {/* Header */}
-                          <div className="sticky top-0 bg-dark-800 border-b border-dark-700 px-4 py-3 flex items-center justify-between">
-                            <h3 className="font-semibold flex items-center gap-2">
-                              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/>
-                              </svg>
-                              Daftar Episode
-                            </h3>
-                            <span className="text-xs text-gray-400 bg-dark-700 px-2 py-1 rounded-full">{episodes.length} Episode</span>
-                          </div>
-                          
-                          {/* Episode Grid */}
-                          <div className="p-4 max-h-[500px] lg:max-h-[600px] overflow-y-auto">
-                            <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-5 xl:grid-cols-6 gap-2">
-                              {episodes.map((ep, i) => (
-                                <button
-                                  key={i}
-                                  onClick={() => playEpisode(ep, ep.chapterIndex)}
-                                  className={`relative aspect-square rounded-xl text-sm font-bold transition-all hover:scale-105 ${
-                                    currentEpisodeIndex === ep.chapterIndex
-                                      ? 'bg-gradient-to-br from-primary to-pink-600 text-white shadow-lg shadow-primary/30'
-                                      : 'bg-dark-600 hover:bg-dark-500 text-gray-300'
-                                  }`}
-                                >
-                                  {i + 1}
-                                  {currentEpisodeIndex === ep.chapterIndex && (
-                                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-dark-800 animate-pulse"></span>
-                                  )}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Drama Info - Show when video not playing - DramaBox Style */}
+                {/* Drama Info - Show when video not playing */}
                 {!showVideo && (
                   <div className="bg-dark-800 rounded-2xl overflow-hidden mb-6 fade-in">
-                    {/* Background Banner */}
                     <div className="relative h-32 sm:h-48 overflow-hidden">
                       <img
                         src={getDramaCover(selectedDrama)}
@@ -660,10 +784,8 @@
                       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-dark-800/50 to-dark-800"></div>
                     </div>
                     
-                    {/* Content */}
                     <div className="relative px-4 sm:px-6 pb-6 -mt-20 sm:-mt-24">
                       <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                        {/* Cover */}
                         <div className="w-28 sm:w-36 flex-shrink-0 mx-auto sm:mx-0">
                           <div className="relative">
                             <img
@@ -680,19 +802,15 @@
                           </div>
                         </div>
 
-                        {/* Info */}
                         <div className="flex-1 text-center sm:text-left pt-4 sm:pt-8">
                           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 leading-tight">
                             {getDramaTitle(selectedDrama)}
                           </h1>
 
-                          {/* Meta Info */}
                           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-sm text-gray-400 mb-4">
                             {selectedDrama?.chapterCount && (
                               <span className="flex items-center gap-1.5 bg-dark-700 px-3 py-1.5 rounded-full">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                  <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/>
-                                </svg>
+                                <ListIcon />
                                 {selectedDrama.chapterCount} Episode
                               </span>
                             )}
@@ -704,7 +822,6 @@
                             )}
                           </div>
 
-                          {/* Tags */}
                           {getDramaTags(selectedDrama).length > 0 && (
                             <div className="flex flex-wrap justify-center sm:justify-start gap-2 mb-4">
                               {getDramaTags(selectedDrama).map((tag, i) => (
@@ -715,12 +832,10 @@
                             </div>
                           )}
 
-                          {/* Description */}
                           <p className="text-sm text-gray-400 line-clamp-3 mb-5 leading-relaxed">
                             {getDramaDesc(selectedDrama) || 'Tidak ada deskripsi tersedia untuk drama ini.'}
                           </p>
 
-                          {/* Action Buttons */}
                           <div className="flex flex-col sm:flex-row gap-3">
                             <button
                               onClick={() => episodes.length > 0 && playEpisode(episodes[0], 0)}
@@ -748,27 +863,23 @@
                 {/* Episodes Grid - Show when video not playing */}
                 {!showVideo && !loading && episodes.length > 0 && (
                   <div className="bg-dark-800 rounded-2xl overflow-hidden fade-in">
-                    {/* Header */}
                     <div className="bg-dark-700/50 px-4 py-3 flex items-center justify-between border-b border-dark-700">
                       <h3 className="font-semibold flex items-center gap-2">
-                        <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/>
-                        </svg>
+                        <ListIcon />
                         Pilih Episode
                       </h3>
                       <span className="text-xs text-gray-400 bg-dark-600 px-3 py-1 rounded-full">Total {episodes.length} Episode</span>
                     </div>
                     
-                    {/* Grid */}
                     <div className="p-4">
                       <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 xl:grid-cols-14 gap-2">
                         {episodes.map((ep, i) => (
                           <button
                             key={i}
                             onClick={() => playEpisode(ep, ep.chapterIndex)}
-                            className={`aspect-square rounded-xl text-sm font-bold transition-all hover:scale-105 ${
+                            className={`ep-btn aspect-square text-sm ${
                               currentEpisodeIndex === ep.chapterIndex
-                                ? 'bg-gradient-to-br from-primary to-pink-600 text-white shadow-lg shadow-primary/30'
+                                ? 'active text-white'
                                 : 'bg-dark-600 hover:bg-dark-500 text-gray-300'
                             }`}
                           >
@@ -780,7 +891,6 @@
                   </div>
                 )}
 
-                {/* Loading */}
                 {loading && (
                   <div className="flex justify-center py-10">
                     <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
@@ -796,7 +906,7 @@
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 rounded bg-primary flex items-center justify-center">
-                    <PlayIcon />
+                    <PlayIcon size={14} />
                   </div>
                   <span className="font-semibold text-white">DSeriesHub</span>
                 </div>

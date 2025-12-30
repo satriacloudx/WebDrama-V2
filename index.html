@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>DSeriesHub - Nonton Drama Gratis</title>
-  <meta name="description" content="Nonton drama favorit kamu secara gratis" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23ec4899'/%3E%3Cpolygon points='35,25 35,75 75,50' fill='white'/%3E%3C/svg%3E" />
+  <meta name="description" content="Nonton drama favorit kamu secara gratis">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23ec4899'/%3E%3Cpolygon points='35,25 35,75 75,50' fill='white'/%3E%3C/svg%3E">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <script>
@@ -73,292 +70,240 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
-    /* ========== FPLAYER STYLE VIDEO PLAYER ========== */
-    
-    /* Main Player Container - Full width on mobile */
-    .fplayer-container {
+    /* Video Player Styles */
+    .video-container {
       position: relative;
       width: 100%;
-      max-width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
       background: #000;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
     
     @media (min-width: 1024px) {
-      .fplayer-container {
-        max-width: 480px;
+      .video-container {
+        margin: 0;
       }
     }
     
-    /* Video Wrapper - Portrait aspect ratio */
-    .fplayer-video-wrapper {
+    .video-wrapper {
       position: relative;
       width: 100%;
       aspect-ratio: 9/16;
       background: #000;
-      overflow: hidden;
     }
     
-    .fplayer-video-wrapper video {
+    .video-wrapper video {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      background: #000;
     }
     
-    /* Top Gradient Overlay */
-    .fplayer-top-overlay {
+    .video-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    
+    .video-overlay-top {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      height: 100px;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
-      z-index: 10;
-      pointer-events: none;
+      height: 80px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
     }
     
-    /* Bottom Gradient Overlay */
-    .fplayer-bottom-overlay {
+    .video-overlay-bottom {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 150px;
-      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-      z-index: 10;
-      pointer-events: none;
+      height: 120px;
+      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
     }
     
-    /* Episode Badge - Top Left */
-    .fplayer-episode-badge {
+    .video-back-btn {
       position: absolute;
       top: 12px;
       left: 12px;
       z-index: 20;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(10px);
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    /* Back Button - Top Left */
-    .fplayer-back-btn {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      z-index: 25;
       width: 40px;
       height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0,0,0,0.5);
       backdrop-filter: blur(10px);
       border-radius: 50%;
       border: 1px solid rgba(255,255,255,0.1);
       cursor: pointer;
-      transition: all 0.2s;
+      pointer-events: auto;
     }
     
-    .fplayer-back-btn:hover {
+    .video-back-btn:hover {
       background: rgba(236, 72, 153, 0.3);
-      border-color: rgba(236, 72, 153, 0.5);
     }
     
-    /* Right Side Action Buttons - FPlayer Style */
-    .fplayer-actions {
+    .video-actions {
       position: absolute;
       right: 12px;
-      bottom: 120px;
+      bottom: 100px;
       z-index: 20;
       display: flex;
       flex-direction: column;
       gap: 16px;
-      align-items: center;
+      pointer-events: auto;
     }
     
-    .fplayer-action-btn {
+    .video-action-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       cursor: pointer;
-      transition: all 0.2s;
     }
     
-    .fplayer-action-btn:hover {
-      transform: scale(1.1);
+    .video-action-btn:hover .video-action-icon {
+      background: rgba(236, 72, 153, 0.3);
+      border-color: rgba(236, 72, 153, 0.5);
     }
     
-    .fplayer-action-btn:active {
-      transform: scale(0.95);
-    }
-    
-    .fplayer-action-icon {
-      width: 48px;
-      height: 48px;
+    .video-action-icon {
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0,0,0,0.5);
       backdrop-filter: blur(10px);
       border-radius: 50%;
       border: 1px solid rgba(255,255,255,0.15);
       transition: all 0.2s;
     }
     
-    .fplayer-action-btn:hover .fplayer-action-icon {
-      background: rgba(236, 72, 153, 0.3);
-      border-color: rgba(236, 72, 153, 0.5);
+    .video-action-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.8);
     }
     
-    .fplayer-action-label {
-      font-size: 11px;
-      color: rgba(255,255,255,0.9);
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-      font-weight: 500;
-    }
-    
-    /* Bottom Info - Title & Episode Navigation */
-    .fplayer-bottom-info {
+    .video-info {
       position: absolute;
-      bottom: 0;
-      left: 0;
+      bottom: 16px;
+      left: 16px;
       right: 70px;
       z-index: 20;
-      padding: 16px;
+      pointer-events: auto;
     }
     
-    .fplayer-title {
-      font-size: 16px;
+    .video-title {
+      font-size: 14px;
       font-weight: 700;
-      color: #fff;
       margin-bottom: 4px;
       text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-      line-clamp: 1;
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
     
-    .fplayer-subtitle {
-      font-size: 13px;
+    .video-subtitle {
+      font-size: 12px;
       color: rgba(255,255,255,0.7);
       margin-bottom: 12px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
     }
     
-    /* Episode Navigation Buttons */
-    .fplayer-nav-buttons {
+    .video-nav-btns {
       display: flex;
-      gap: 10px;
+      gap: 8px;
     }
     
-    .fplayer-nav-btn {
+    .video-nav-btn {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 10px 18px;
+      gap: 4px;
+      padding: 8px 16px;
       background: rgba(255,255,255,0.15);
       backdrop-filter: blur(10px);
-      border-radius: 24px;
+      border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.2);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: #fff;
       cursor: pointer;
       transition: all 0.2s;
     }
     
-    .fplayer-nav-btn:hover:not(:disabled) {
+    .video-nav-btn:hover:not(:disabled) {
       background: rgba(236, 72, 153, 0.4);
-      border-color: rgba(236, 72, 153, 0.6);
     }
     
-    .fplayer-nav-btn:disabled {
+    .video-nav-btn:disabled {
       opacity: 0.4;
       cursor: not-allowed;
     }
     
-    .fplayer-nav-btn.primary {
-      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+    .video-nav-btn.primary {
+      background: linear-gradient(135deg, #ec4899, #be185d);
       border: none;
     }
     
-    .fplayer-nav-btn.primary:hover:not(:disabled) {
-      background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
-      transform: scale(1.02);
-    }
-    
-    /* Center Play Button (when paused) */
-    .fplayer-center-play {
+    .video-center-play {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 15;
-      width: 72px;
-      height: 72px;
+      width: 64px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: rgba(236, 72, 153, 0.9);
       border-radius: 50%;
       cursor: pointer;
-      transition: all 0.2s;
+      pointer-events: auto;
       box-shadow: 0 4px 20px rgba(236, 72, 153, 0.5);
     }
     
-    .fplayer-center-play:hover {
+    .video-center-play:hover {
       transform: translate(-50%, -50%) scale(1.1);
-      background: rgba(236, 72, 153, 1);
     }
     
-    /* Progress Bar */
-    .fplayer-progress-container {
+    .video-progress {
       position: absolute;
-      bottom: 80px;
+      bottom: 70px;
       left: 16px;
-      right: 80px;
+      right: 70px;
       z-index: 20;
       height: 4px;
       background: rgba(255,255,255,0.2);
       border-radius: 2px;
       cursor: pointer;
-      overflow: hidden;
+      pointer-events: auto;
     }
     
-    .fplayer-progress-bar {
+    .video-progress-bar {
       height: 100%;
       background: linear-gradient(90deg, #ec4899, #f472b6);
       border-radius: 2px;
-      transition: width 0.1s linear;
     }
     
-    /* Time Display */
-    .fplayer-time {
+    .video-time {
       position: absolute;
-      bottom: 88px;
+      bottom: 78px;
       left: 16px;
       z-index: 20;
-      font-size: 11px;
-      color: rgba(255,255,255,0.8);
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+      font-size: 10px;
+      color: rgba(255,255,255,0.7);
     }
     
-    /* ========== EPISODE PANEL (Slide from right) ========== */
+    /* Episode Panel */
     .episode-panel {
       position: fixed;
       top: 0;
       right: 0;
       bottom: 0;
       width: 100%;
-      max-width: 400px;
+      max-width: 360px;
       background: #121212;
       z-index: 100;
       transform: translateX(100%);
@@ -386,83 +331,13 @@
       visibility: visible;
     }
     
-    .episode-panel-header {
-      flex-shrink: 0;
-      padding: 16px 20px;
-      background: #1a1a1a;
-      border-bottom: 1px solid #2a2a2a;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    
-    .episode-panel-title {
-      font-size: 18px;
-      font-weight: 700;
-    }
-    
-    .episode-panel-close {
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #2a2a2a;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .episode-panel-close:hover {
-      background: #ec4899;
-    }
-    
-    .episode-panel-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-    }
-    
-    .episode-panel-drama-info {
-      display: flex;
-      gap: 12px;
-      padding: 16px;
-      background: #1a1a1a;
-      border-radius: 12px;
-      margin-bottom: 16px;
-    }
-    
-    .episode-panel-cover {
-      width: 60px;
-      height: 80px;
-      border-radius: 8px;
-      object-fit: cover;
-      flex-shrink: 0;
-    }
-    
-    .episode-panel-drama-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      line-clamp: 2;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    
-    .episode-panel-drama-meta {
-      font-size: 12px;
-      color: #888;
-    }
-    
     .episode-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
     }
     
-    .episode-grid-btn {
+    .episode-btn {
       aspect-ratio: 1;
       display: flex;
       align-items: center;
@@ -474,20 +349,21 @@
       cursor: pointer;
       transition: all 0.2s;
       position: relative;
+      border: none;
+      color: #fff;
     }
     
-    .episode-grid-btn:hover {
+    .episode-btn:hover {
       background: #3a3a3a;
       transform: scale(1.05);
     }
     
-    .episode-grid-btn.active {
-      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
-      color: #fff;
+    .episode-btn.active {
+      background: linear-gradient(135deg, #ec4899, #be185d);
       box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
     }
     
-    .episode-grid-btn.active::after {
+    .episode-btn.active::after {
       content: '';
       position: absolute;
       top: -2px;
@@ -499,68 +375,12 @@
       border: 2px solid #121212;
     }
     
-    /* Episode button styles */
-    .ep-btn {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      border-radius: 12px;
-      transition: all 0.2s ease;
-    }
-    
-    .ep-btn:hover {
-      transform: scale(1.05);
-    }
-    
-    .ep-btn.active {
-      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
-      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
-    }
-    
-    .ep-btn.active::after {
-      content: '';
-      position: absolute;
-      top: -3px;
-      right: -3px;
-      width: 10px;
-      height: 10px;
-      background: #22c55e;
-      border-radius: 50%;
-      border: 2px solid #121212;
-      animation: pulse-dot 1.5s ease-in-out infinite;
-    }
-    
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.7; transform: scale(1.2); }
-    }
-    
-    /* Loading spinner */
-    .loading-spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid rgba(236, 72, 153, 0.2);
-      border-top-color: #ec4899;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
     /* Desktop Layout */
     @media (min-width: 1024px) {
       .player-layout {
         display: flex;
         gap: 24px;
         align-items: flex-start;
-      }
-      
-      .player-main {
-        flex-shrink: 0;
       }
       
       .player-sidebar {
@@ -572,906 +392,820 @@
         display: flex;
         flex-direction: column;
       }
-      
-      .player-sidebar-header {
-        flex-shrink: 0;
-        padding: 16px 20px;
-        background: #1a1a1a;
-        border-bottom: 1px solid #2a2a2a;
-      }
-      
-      .player-sidebar-content {
-        flex: 1;
-        overflow-y: auto;
-        padding: 16px;
-      }
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(236, 72, 153, 0.2);
+      border-top-color: #ec4899;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="app"></div>
   
-  <script type="text/babel">
-    const { useState, useEffect, useRef } = React;
-    
+  <script>
+    // Simple App without React - Pure JavaScript
     const API_BASE = 'https://restxdb.onrender.com/api';
     const LANG = 'in';
     
-    // Icons
-    const SearchIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>;
-    const PlayIcon = ({ size = 20 }) => <svg width={size} height={size} fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>;
-    const PauseIcon = ({ size = 20 }) => <svg width={size} height={size} fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>;
-    const HomeIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>;
-    const TrendingIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>;
-    const ClockIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>;
-    const BackIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>;
-    const StarIcon = () => <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>;
-    const XIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>;
-    const EyeIcon = () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>;
-    const ListIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>;
-    const DownloadIcon = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>;
-    const ShareIcon = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>;
-    const MenuIcon = () => <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>;
-    const ChevronLeftIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>;
-    const ChevronRightIcon = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>;
+    // State
+    let state = {
+      activeTab: 'home',
+      previousTab: 'home',
+      searchQuery: '',
+      searchSuggestions: [],
+      showSuggestions: false,
+      recommendations: [],
+      newReleases: [],
+      popularDramas: [],
+      searchResults: [],
+      selectedDrama: null,
+      episodes: [],
+      currentEpisodeIndex: 0,
+      videoUrl: '',
+      loading: false,
+      error: '',
+      showVideo: false,
+      isPlaying: false,
+      showEpisodePanel: false,
+      currentTime: 0,
+      duration: 0,
+      isMobile: window.innerWidth < 1024
+    };
     
-    const App = () => {
-      const [activeTab, setActiveTab] = useState('home');
-      const [previousTab, setPreviousTab] = useState('home');
-      const [searchQuery, setSearchQuery] = useState('');
-      const [searchSuggestions, setSuggestions] = useState([]);
-      const [showSuggestions, setShowSuggestions] = useState(false);
-      const [recommendations, setRecommendations] = useState([]);
-      const [newReleases, setNewReleases] = useState([]);
-      const [popularDramas, setPopularDramas] = useState([]);
-      const [searchResults, setSearchResults] = useState([]);
-      const [selectedDrama, setSelectedDrama] = useState(null);
-      const [episodes, setEpisodes] = useState([]);
-      const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
-      const [videoUrl, setVideoUrl] = useState('');
-      const [loading, setLoading] = useState(false);
-      const [error, setError] = useState('');
-      const [showVideo, setShowVideo] = useState(false);
-      const [isPlaying, setIsPlaying] = useState(false);
-      const [showEpisodePanel, setShowEpisodePanel] = useState(false);
-      const [currentTime, setCurrentTime] = useState(0);
-      const [duration, setDuration] = useState(0);
-      const [showControls, setShowControls] = useState(true);
-      const [isMobile, setIsMobile] = useState(false);
-      const videoRef = useRef(null);
-      const controlsTimeoutRef = useRef(null);
+    // Helper functions
+    const getDramaTitle = (d) => d?.bookName || d?.name || d?.title || 'Tanpa Judul';
+    const getDramaDesc = (d) => d?.introduction || d?.description || d?.intro || '';
+    const getDramaCover = (d) => d?.cover || d?.coverWap || d?.coverUrl || '';
+    const getDramaId = (d) => d?.bookId || d?.id || d?.dramaId || '';
+    const getDramaTags = (d) => d?.tags || d?.tagV3s?.map(t => t.tagName) || [];
+    
+    const formatTime = (seconds) => {
+      if (!seconds || isNaN(seconds)) return '0:00';
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+    
+    // Icons as SVG strings
+    const icons = {
+      search: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>`,
+      play: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`,
+      playLarge: `<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`,
+      home: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`,
+      trending: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
+      clock: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+      back: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>`,
+      star: `<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
+      x: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>`,
+      download: `<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+      share: `<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>`,
+      menu: `<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>`,
+      chevronLeft: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>`,
+      chevronRight: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>`,
+      list: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>`,
+      eye: `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
+    };
+    
+    // API Functions
+    async function fetchRecommendations() {
+      try {
+        const res = await fetch(`${API_BASE}/foryou/1?lang=${LANG}`);
+        const data = await res.json();
+        state.recommendations = data?.data?.list || [];
+      } catch (e) { console.error(e); }
+    }
+    
+    async function fetchNewReleases() {
+      try {
+        const res = await fetch(`${API_BASE}/new/1?lang=${LANG}&pageSize=20`);
+        const data = await res.json();
+        state.newReleases = data?.data?.list || [];
+      } catch (e) { console.error(e); }
+    }
+    
+    async function fetchPopular() {
+      try {
+        const res = await fetch(`${API_BASE}/rank/1?lang=${LANG}`);
+        const data = await res.json();
+        state.popularDramas = data?.data?.list || [];
+      } catch (e) { console.error(e); }
+    }
+    
+    async function loadHomeData() {
+      state.loading = true;
+      render();
+      await Promise.all([fetchRecommendations(), fetchNewReleases(), fetchPopular()]);
+      state.loading = false;
+      render();
+    }
+    
+    async function handleSearch(query) {
+      if (!query.trim()) return;
+      state.loading = true;
+      state.error = '';
+      state.showSuggestions = false;
+      render();
       
-      // Check if mobile on mount and resize
-      useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-      }, []);
-
-      useEffect(() => {
-        if (activeTab === 'home') loadHomeData();
-        else if (activeTab === 'popular') { setLoading(true); fetchPopular().then(() => setLoading(false)); }
-        else if (activeTab === 'new') { setLoading(true); fetchNewReleases().then(() => setLoading(false)); }
-      }, [activeTab]);
-
-      const loadHomeData = async () => {
-        setLoading(true);
-        await Promise.all([fetchRecommendations(), fetchNewReleases(), fetchPopular()]);
-        setLoading(false);
-      };
-
-      const fetchRecommendations = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/search/${encodeURIComponent(query)}/1?lang=${LANG}`);
+        const data = await res.json();
+        state.searchResults = data?.data?.list || [];
+        state.previousTab = state.activeTab;
+        state.activeTab = 'search';
+        if (state.searchResults.length === 0) state.error = 'Tidak ada hasil ditemukan';
+      } catch (e) { 
+        state.error = 'Gagal melakukan pencarian'; 
+      }
+      state.loading = false;
+      render();
+    }
+    
+    async function handleSearchInput(val) {
+      state.searchQuery = val;
+      if (val.length > 1) {
         try {
-          const res = await fetch(`${API_BASE}/foryou/1?lang=${LANG}`);
+          const res = await fetch(`${API_BASE}/suggest/${encodeURIComponent(val)}?lang=${LANG}`);
           const data = await res.json();
-          setRecommendations(data?.data?.list || []);
-        } catch (e) { console.error(e); }
-      };
-
-      const fetchNewReleases = async () => {
-        try {
-          const res = await fetch(`${API_BASE}/new/1?lang=${LANG}&pageSize=20`);
-          const data = await res.json();
-          setNewReleases(data?.data?.list || []);
-        } catch (e) { console.error(e); }
-      };
-
-      const fetchPopular = async () => {
-        try {
-          const res = await fetch(`${API_BASE}/rank/1?lang=${LANG}`);
-          const data = await res.json();
-          setPopularDramas(data?.data?.list || []);
-        } catch (e) { console.error(e); }
-      };
-
-      const handleSearch = async (query) => {
-        if (!query.trim()) return;
-        setLoading(true);
-        setError('');
-        setShowSuggestions(false);
-        try {
-          const res = await fetch(`${API_BASE}/search/${encodeURIComponent(query)}/1?lang=${LANG}`);
-          const data = await res.json();
-          const items = data?.data?.list || [];
-          setSearchResults(items);
-          setPreviousTab(activeTab);
-          setActiveTab('search');
-          if (items.length === 0) setError('Tidak ada hasil ditemukan');
-        } catch (e) { setError('Gagal melakukan pencarian'); }
-        setLoading(false);
-      };
-
-      const handleSearchInput = async (val) => {
-        setSearchQuery(val);
-        if (val.length > 1) {
-          try {
-            const res = await fetch(`${API_BASE}/suggest/${encodeURIComponent(val)}?lang=${LANG}`);
-            const data = await res.json();
-            setSuggestions(data?.data || []);
-            setShowSuggestions(true);
-          } catch (e) { setSuggestions([]); }
+          state.searchSuggestions = data?.data || [];
+          state.showSuggestions = true;
+        } catch (e) { state.searchSuggestions = []; }
+      } else {
+        state.searchSuggestions = [];
+        state.showSuggestions = false;
+      }
+      render();
+    }
+    
+    async function selectDrama(drama) {
+      state.previousTab = state.activeTab;
+      state.selectedDrama = drama;
+      state.activeTab = 'detail';
+      state.loading = true;
+      state.error = '';
+      state.showVideo = false;
+      state.videoUrl = '';
+      state.currentEpisodeIndex = 0;
+      render();
+      
+      try {
+        const res = await fetch(`${API_BASE}/chapters/${getDramaId(drama)}?lang=${LANG}`);
+        const data = await res.json();
+        state.episodes = data?.data?.chapterList || [];
+        if (state.episodes.length === 0) state.error = 'Tidak ada episode tersedia';
+      } catch (e) {
+        state.error = 'Gagal memuat episode';
+        state.episodes = [];
+      }
+      state.loading = false;
+      render();
+    }
+    
+    function goBack() {
+      if (state.showVideo) {
+        state.showVideo = false;
+        state.videoUrl = '';
+      } else {
+        state.selectedDrama = null;
+        state.activeTab = state.previousTab;
+      }
+      render();
+    }
+    
+    async function playEpisode(episode, index) {
+      state.loading = true;
+      state.error = '';
+      state.currentEpisodeIndex = index;
+      state.showEpisodePanel = false;
+      render();
+      
+      try {
+        const res = await fetch(`${API_BASE}/watch/${getDramaId(state.selectedDrama)}/${index}?lang=${LANG}&source=search_result`);
+        const data = await res.json();
+        const url = data?.data?.videoUrl || data?.data?.url;
+        if (url) {
+          state.videoUrl = url;
+          state.showVideo = true;
+          state.isPlaying = true;
         } else {
-          setSuggestions([]);
-          setShowSuggestions(false);
+          state.error = 'Video tidak tersedia';
         }
-      };
-
-      const getDramaTitle = (d) => d?.bookName || d?.name || d?.title || 'Tanpa Judul';
-      const getDramaDesc = (d) => d?.introduction || d?.description || d?.intro || '';
-      const getDramaCover = (d) => d?.cover || d?.coverWap || d?.coverUrl || '';
-      const getDramaId = (d) => d?.bookId || d?.id || d?.dramaId || '';
-      const getDramaTags = (d) => d?.tags || d?.tagV3s?.map(t => t.tagName) || [];
-
-      const selectDrama = async (drama) => {
-        setPreviousTab(activeTab);
-        setSelectedDrama(drama);
-        setActiveTab('detail');
-        setLoading(true);
-        setError('');
-        setShowVideo(false);
-        setVideoUrl('');
-        setCurrentEpisodeIndex(0);
-
-        try {
-          const res = await fetch(`${API_BASE}/chapters/${getDramaId(drama)}?lang=${LANG}`);
-          const data = await res.json();
-          const episodeList = data?.data?.chapterList || [];
-          setEpisodes(episodeList);
-          if (episodeList.length === 0) setError('Tidak ada episode tersedia');
-        } catch (e) {
-          setError('Gagal memuat episode');
-          setEpisodes([]);
-        }
-        setLoading(false);
-      };
-
-      const goBack = () => {
-        if (showVideo) {
-          setShowVideo(false);
-          setVideoUrl('');
-        } else {
-          setSelectedDrama(null);
-          setActiveTab(previousTab);
-        }
-      };
-
-      const playEpisode = async (episode, index) => {
-        setLoading(true);
-        setError('');
-        setCurrentEpisodeIndex(index);
-        setShowEpisodePanel(false);
-
-        try {
-          const res = await fetch(`${API_BASE}/watch/${getDramaId(selectedDrama)}/${index}?lang=${LANG}&source=search_result`);
-          const data = await res.json();
-          const url = data?.data?.videoUrl || data?.data?.url;
-          if (url) {
-            setVideoUrl(url);
-            setShowVideo(true);
-            setIsPlaying(true);
-          } else {
-            setError('Video tidak tersedia');
-          }
-        } catch (e) {
-          setError('Gagal memutar video');
-        }
-        setLoading(false);
-      };
-
-      const playNextEpisode = () => {
-        const nextIndex = currentEpisodeIndex + 1;
-        if (nextIndex < episodes.length) {
-          playEpisode(episodes[nextIndex], nextIndex);
-        }
-      };
-
-      const playPrevEpisode = () => {
-        const prevIndex = currentEpisodeIndex - 1;
-        if (prevIndex >= 0) {
-          playEpisode(episodes[prevIndex], prevIndex);
-        }
-      };
-
-      const togglePlay = () => {
-        if (videoRef.current) {
-          if (isPlaying) {
-            videoRef.current.pause();
-          } else {
-            videoRef.current.play();
-          }
-          setIsPlaying(!isPlaying);
-        }
-      };
-
-      const handleVideoClick = () => {
-        setShowControls(true);
-        if (controlsTimeoutRef.current) {
-          clearTimeout(controlsTimeoutRef.current);
-        }
-        controlsTimeoutRef.current = setTimeout(() => {
-          if (isPlaying) setShowControls(false);
-        }, 3000);
-      };
-
-      const handleTimeUpdate = () => {
-        if (videoRef.current) {
-          setCurrentTime(videoRef.current.currentTime);
-          setDuration(videoRef.current.duration || 0);
-        }
-      };
-
-      const handleSeek = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const pos = (e.clientX - rect.left) / rect.width;
-        if (videoRef.current && duration) {
-          videoRef.current.currentTime = pos * duration;
-        }
-      };
-
-      const formatTime = (seconds) => {
-        if (!seconds || isNaN(seconds)) return '0:00';
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-      };
-
-      const handleShare = () => {
-        if (navigator.share) {
-          navigator.share({
-            title: getDramaTitle(selectedDrama),
-            text: `Tonton ${getDramaTitle(selectedDrama)} Episode ${currentEpisodeIndex + 1}`,
-            url: window.location.href
-          });
-        } else {
-          navigator.clipboard.writeText(window.location.href);
-          alert('Link berhasil disalin!');
-        }
-      };
-
-      const handleDownload = () => {
-        if (videoUrl) {
-          const a = document.createElement('a');
-          a.href = videoUrl;
-          a.download = `${getDramaTitle(selectedDrama)}_EP${currentEpisodeIndex + 1}.mp4`;
-          a.click();
-        }
-      };
-
-      // Drama Card
-      const DramaCard = ({ drama, rank }) => (
-        <div onClick={() => selectDrama(drama)} className="card-hover cursor-pointer group">
-          <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-dark-700">
-            {getDramaCover(drama) ? (
-              <img src={getDramaCover(drama)} alt={getDramaTitle(drama)} className="w-full h-full object-cover" loading="lazy" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-dark-600">
-                <PlayIcon />
-              </div>
-            )}
+      } catch (e) {
+        state.error = 'Gagal memutar video';
+      }
+      state.loading = false;
+      render();
+    }
+    
+    function playNextEpisode() {
+      const nextIndex = state.currentEpisodeIndex + 1;
+      if (nextIndex < state.episodes.length) {
+        playEpisode(state.episodes[nextIndex], nextIndex);
+      }
+    }
+    
+    function playPrevEpisode() {
+      const prevIndex = state.currentEpisodeIndex - 1;
+      if (prevIndex >= 0) {
+        playEpisode(state.episodes[prevIndex], prevIndex);
+      }
+    }
+    
+    function handleShare() {
+      if (navigator.share) {
+        navigator.share({
+          title: getDramaTitle(state.selectedDrama),
+          text: `Tonton ${getDramaTitle(state.selectedDrama)} Episode ${state.currentEpisodeIndex + 1}`,
+          url: window.location.href
+        });
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link berhasil disalin!');
+      }
+    }
+    
+    function handleDownload() {
+      if (state.videoUrl) {
+        const a = document.createElement('a');
+        a.href = state.videoUrl;
+        a.download = `${getDramaTitle(state.selectedDrama)}_EP${state.currentEpisodeIndex + 1}.mp4`;
+        a.click();
+      }
+    }
+    
+    function setActiveTab(tab) {
+      state.activeTab = tab;
+      state.previousTab = tab;
+      state.selectedDrama = null;
+      state.showVideo = false;
+      
+      if (tab === 'home') loadHomeData();
+      else if (tab === 'popular') {
+        state.loading = true;
+        render();
+        fetchPopular().then(() => { state.loading = false; render(); });
+      }
+      else if (tab === 'new') {
+        state.loading = true;
+        render();
+        fetchNewReleases().then(() => { state.loading = false; render(); });
+      }
+      else render();
+    }
+    
+    // Render Functions
+    function renderDramaCard(drama, index, showRank = false) {
+      const cover = getDramaCover(drama);
+      const title = getDramaTitle(drama);
+      const tags = getDramaTags(drama);
+      
+      return `
+        <div class="card-hover cursor-pointer group" onclick="selectDrama(${JSON.stringify(drama).replace(/"/g, '&quot;')})">
+          <div class="relative aspect-[2/3] rounded-xl overflow-hidden bg-dark-700">
+            ${cover ? `<img src="${cover}" alt="${title}" class="w-full h-full object-cover" loading="lazy">` : 
+              `<div class="w-full h-full flex items-center justify-center bg-dark-600">${icons.play}</div>`}
             
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                <PlayIcon />
-              </div>
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center">${icons.play}</div>
             </div>
             
-            {drama?.score && (
-              <div className="absolute top-2 left-2 bg-primary px-1.5 py-0.5 rounded text-xs font-semibold flex items-center gap-0.5">
-                <StarIcon />
-                {drama.score}
-              </div>
-            )}
+            ${drama?.score ? `
+              <div class="absolute top-2 left-2 bg-primary px-1.5 py-0.5 rounded text-xs font-semibold flex items-center gap-0.5">
+                ${icons.star}${drama.score}
+              </div>` : ''}
             
-            {rank !== undefined && rank < 10 && (
-              <div className="absolute top-2 right-2 w-6 h-6 bg-black/80 rounded flex items-center justify-center text-xs font-bold">
-                {rank + 1}
-              </div>
-            )}
+            ${showRank && index < 10 ? `
+              <div class="absolute top-2 right-2 w-6 h-6 bg-black/80 rounded flex items-center justify-center text-xs font-bold">
+                ${index + 1}
+              </div>` : ''}
             
-            {drama?.chapterCount && (
-              <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs">
-                {drama.chapterCount} EP
-              </div>
-            )}
+            ${drama?.chapterCount ? `
+              <div class="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs">
+                ${drama.chapterCount} EP
+              </div>` : ''}
           </div>
           
-          <div className="mt-2">
-            <h3 className="text-sm font-medium line-clamp-2 group-hover:text-primary transition-colors">
-              {getDramaTitle(drama)}
-            </h3>
-            {getDramaTags(drama).length > 0 && (
-              <p className="text-xs text-gray-500 mt-1 line-clamp-1">
-                {getDramaTags(drama).slice(0, 2).join(' • ')}
-              </p>
-            )}
+          <div class="mt-2">
+            <h3 class="text-sm font-medium line-clamp-2 group-hover:text-primary transition-colors">${title}</h3>
+            ${tags.length > 0 ? `<p class="text-xs text-gray-500 mt-1 line-clamp-1">${tags.slice(0, 2).join(' • ')}</p>` : ''}
           </div>
         </div>
-      );
-
-      // Loading skeleton
-      const Skeleton = () => (
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
-          {[...Array(16)].map((_, i) => (
-            <div key={i}>
-              <div className="aspect-[2/3] rounded-xl shimmer" />
-              <div className="mt-2 h-4 rounded shimmer w-3/4" />
-              <div className="mt-1 h-3 rounded shimmer w-1/2" />
-            </div>
-          ))}
-        </div>
-      );
-
-      // Section component
-      const Section = ({ title, icon, children, viewAll }) => (
-        <section className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <span className="text-primary">{icon}</span>
-              <h2 className="text-lg md:text-xl font-bold">{title}</h2>
-            </div>
-            {viewAll && (
-              <button onClick={viewAll} className="text-sm text-primary hover:underline">
-                Lihat Semua
-              </button>
-            )}
+      `;
+    }
+    
+    function renderSkeleton() {
+      let html = '<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">';
+      for (let i = 0; i < 16; i++) {
+        html += `
+          <div>
+            <div class="aspect-[2/3] rounded-xl shimmer"></div>
+            <div class="mt-2 h-4 rounded shimmer w-3/4"></div>
+            <div class="mt-1 h-3 rounded shimmer w-1/2"></div>
           </div>
-          {children}
+        `;
+      }
+      html += '</div>';
+      return html;
+    }
+    
+    function renderSection(title, icon, dramas, showRank = false) {
+      return `
+        <section class="mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-primary">${icon}</span>
+              <h2 class="text-lg md:text-xl font-bold">${title}</h2>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
+            ${dramas.map((d, i) => renderDramaCard(d, i, showRank)).join('')}
+          </div>
         </section>
-      );
-
-      // FPlayer Video Player Component
-      const FPlayerVideoPlayer = () => (
-        <div className="fade-in">
-          <div className="player-layout">
-            {/* Main Player */}
-            <div className="player-main">
-              <div className="fplayer-container rounded-2xl overflow-hidden shadow-2xl">
-                <div className="fplayer-video-wrapper" onClick={handleVideoClick}>
-                  {/* Video Element */}
-                  <video
-                    ref={videoRef}
-                    src={videoUrl}
-                    className="w-full h-full"
-                    autoPlay
-                    playsInline
-                    onTimeUpdate={handleTimeUpdate}
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                    onEnded={playNextEpisode}
-                    onError={() => setError('Gagal memutar video')}
-                  />
+      `;
+    }
+    
+    function renderVideoPlayer() {
+      const drama = state.selectedDrama;
+      const ep = state.currentEpisodeIndex;
+      const total = state.episodes.length;
+      
+      return `
+        <div class="fade-in">
+          <div class="player-layout">
+            <!-- Video Container -->
+            <div>
+              <div class="video-container" id="videoContainer">
+                <div class="video-wrapper">
+                  <video 
+                    id="mainVideo"
+                    src="${state.videoUrl}" 
+                    autoplay 
+                    playsinline
+                  ></video>
                   
-                  {/* Top Overlay */}
-                  <div className="fplayer-top-overlay" />
-                  
-                  {/* Bottom Overlay */}
-                  <div className="fplayer-bottom-overlay" />
-                  
-                  {/* Back Button */}
-                  <div 
-                    className="fplayer-back-btn"
-                    onClick={(e) => { e.stopPropagation(); goBack(); }}
-                  >
-                    <ChevronLeftIcon />
-                  </div>
-                  
-                  {/* Center Play Button (when paused) */}
-                  {!isPlaying && (
-                    <div className="fplayer-center-play" onClick={(e) => { e.stopPropagation(); togglePlay(); }}>
-                      <PlayIcon size={32} />
-                    </div>
-                  )}
-                  
-                  {/* Right Side Action Buttons - FPlayer Style */}
-                  <div className={`fplayer-actions transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
-                    {/* Download Button */}
-                    <div className="fplayer-action-btn" onClick={handleDownload}>
-                      <div className="fplayer-action-icon">
-                        <DownloadIcon />
-                      </div>
-                      <span className="fplayer-action-label">Download</span>
+                  <!-- Overlays -->
+                  <div class="video-overlay">
+                    <div class="video-overlay-top"></div>
+                    <div class="video-overlay-bottom"></div>
+                    
+                    <!-- Back Button -->
+                    <div class="video-back-btn" onclick="goBack()">${icons.chevronLeft}</div>
+                    
+                    <!-- Center Play (when paused) -->
+                    <div class="video-center-play" id="centerPlayBtn" style="display: none;" onclick="togglePlay()">
+                      ${icons.playLarge}
                     </div>
                     
-                    {/* Share Button */}
-                    <div className="fplayer-action-btn" onClick={handleShare}>
-                      <div className="fplayer-action-icon">
-                        <ShareIcon />
+                    <!-- Right Actions -->
+                    <div class="video-actions">
+                      <div class="video-action-btn" onclick="handleDownload()">
+                        <div class="video-action-icon">${icons.download}</div>
+                        <span class="video-action-label">Download</span>
                       </div>
-                      <span className="fplayer-action-label">Bagikan</span>
+                      <div class="video-action-btn" onclick="handleShare()">
+                        <div class="video-action-icon">${icons.share}</div>
+                        <span class="video-action-label">Bagikan</span>
+                      </div>
+                      <div class="video-action-btn lg:hidden" onclick="toggleEpisodePanel()">
+                        <div class="video-action-icon">${icons.menu}</div>
+                        <span class="video-action-label">Episode</span>
+                      </div>
                     </div>
                     
-                    {/* Episodes Button */}
-                    <div className="fplayer-action-btn lg:hidden" onClick={() => setShowEpisodePanel(true)}>
-                      <div className="fplayer-action-icon">
-                        <MenuIcon />
-                      </div>
-                      <span className="fplayer-action-label">Episode</span>
+                    <!-- Progress Bar -->
+                    <div class="video-progress" id="progressContainer">
+                      <div class="video-progress-bar" id="progressBar" style="width: 0%"></div>
                     </div>
-                  </div>
-                  
-                  {/* Progress Bar */}
-                  <div 
-                    className={`fplayer-progress-container transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}
-                    onClick={handleSeek}
-                  >
-                    <div 
-                      className="fplayer-progress-bar" 
-                      style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
-                    />
-                  </div>
-                  
-                  {/* Time Display */}
-                  <div className={`fplayer-time transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
-                    {formatTime(currentTime)} / {formatTime(duration)}
-                  </div>
-                  
-                  {/* Bottom Info */}
-                  <div className={`fplayer-bottom-info transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
-                    <div className="fplayer-title">{getDramaTitle(selectedDrama)}</div>
-                    <div className="fplayer-subtitle">Episode {currentEpisodeIndex + 1} dari {episodes.length}</div>
                     
-                    {/* Navigation Buttons */}
-                    <div className="fplayer-nav-buttons">
-                      <button 
-                        className="fplayer-nav-btn"
-                        onClick={(e) => { e.stopPropagation(); playPrevEpisode(); }}
-                        disabled={currentEpisodeIndex === 0}
-                      >
-                        <ChevronLeftIcon />
-                        <span>Prev</span>
-                      </button>
-                      <button 
-                        className="fplayer-nav-btn primary"
-                        onClick={(e) => { e.stopPropagation(); playNextEpisode(); }}
-                        disabled={currentEpisodeIndex >= episodes.length - 1}
-                      >
-                        <span>Next</span>
-                        <ChevronRightIcon />
-                      </button>
+                    <!-- Time -->
+                    <div class="video-time" id="timeDisplay">0:00 / 0:00</div>
+                    
+                    <!-- Info -->
+                    <div class="video-info">
+                      <div class="video-title">${getDramaTitle(drama)}</div>
+                      <div class="video-subtitle">Episode ${ep + 1} dari ${total}</div>
+                      <div class="video-nav-btns">
+                        <button class="video-nav-btn" onclick="playPrevEpisode()" ${ep === 0 ? 'disabled' : ''}>
+                          ${icons.chevronLeft} Prev
+                        </button>
+                        <button class="video-nav-btn primary" onclick="playNextEpisode()" ${ep >= total - 1 ? 'disabled' : ''}>
+                          Next ${icons.chevronRight}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             
-            {/* Desktop Sidebar - Episode List */}
-            <div className="player-sidebar hidden lg:flex">
-              <div className="player-sidebar-header">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
-                      <ListIcon />
-                    </div>
-                    <div>
-                      <h3 className="font-bold">Daftar Episode</h3>
-                      <p className="text-xs text-gray-400">{episodes.length} Episode tersedia</p>
-                    </div>
+            <!-- Desktop Episode Sidebar -->
+            <div class="player-sidebar hidden lg:flex flex-col">
+              <div class="p-4 bg-dark-700 border-b border-dark-600">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+                    ${icons.list}
+                  </div>
+                  <div>
+                    <h3 class="font-bold">Daftar Episode</h3>
+                    <p class="text-xs text-gray-400">${total} Episode tersedia</p>
                   </div>
                 </div>
               </div>
-              
-              <div className="player-sidebar-content">
-                {/* Drama Info */}
-                <div className="episode-panel-drama-info mb-4">
-                  <img src={getDramaCover(selectedDrama)} alt="" className="episode-panel-cover" />
+              <div class="flex-1 overflow-y-auto p-4">
+                <div class="flex gap-3 p-3 bg-dark-700 rounded-xl mb-4">
+                  <img src="${getDramaCover(drama)}" class="w-14 h-20 rounded-lg object-cover">
                   <div>
-                    <div className="episode-panel-drama-title">{getDramaTitle(selectedDrama)}</div>
-                    <div className="episode-panel-drama-meta">
-                      {selectedDrama?.score && <span>⭐ {selectedDrama.score}</span>}
-                    </div>
+                    <div class="text-sm font-semibold line-clamp-2">${getDramaTitle(drama)}</div>
+                    <div class="text-xs text-gray-400 mt-1">${drama?.score ? '⭐ ' + drama.score : ''}</div>
+                  </div>
+                </div>
+                <div class="episode-grid">
+                  ${state.episodes.map((e, i) => `
+                    <button class="episode-btn ${state.currentEpisodeIndex === e.chapterIndex ? 'active' : ''}" 
+                            onclick="playEpisode(${JSON.stringify(e).replace(/"/g, '&quot;')}, ${e.chapterIndex})">
+                      ${i + 1}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Mobile Episode Panel Overlay -->
+          <div class="episode-panel-overlay ${state.showEpisodePanel ? 'open' : ''}" onclick="toggleEpisodePanel()"></div>
+          
+          <!-- Mobile Episode Panel -->
+          <div class="episode-panel lg:hidden ${state.showEpisodePanel ? 'open' : ''}">
+            <div class="p-4 bg-dark-700 border-b border-dark-600 flex items-center justify-between">
+              <span class="font-bold text-lg">Daftar Episode</span>
+              <div class="w-9 h-9 rounded-full bg-dark-500 flex items-center justify-center cursor-pointer" onclick="toggleEpisodePanel()">
+                ${icons.x}
+              </div>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4">
+              <div class="flex gap-3 p-3 bg-dark-700 rounded-xl mb-4">
+                <img src="${getDramaCover(drama)}" class="w-14 h-20 rounded-lg object-cover">
+                <div>
+                  <div class="text-sm font-semibold line-clamp-2">${getDramaTitle(drama)}</div>
+                  <div class="text-xs text-gray-400 mt-1">${total} Episode</div>
+                </div>
+              </div>
+              <div class="episode-grid">
+                ${state.episodes.map((e, i) => `
+                  <button class="episode-btn ${state.currentEpisodeIndex === e.chapterIndex ? 'active' : ''}" 
+                          onclick="playEpisode(${JSON.stringify(e).replace(/"/g, '&quot;')}, ${e.chapterIndex})">
+                    ${i + 1}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function renderDetailPage() {
+      const drama = state.selectedDrama;
+      const cover = getDramaCover(drama);
+      const title = getDramaTitle(drama);
+      const desc = getDramaDesc(drama);
+      const tags = getDramaTags(drama);
+      
+      if (state.showVideo && state.videoUrl) {
+        return renderVideoPlayer();
+      }
+      
+      return `
+        <div class="fade-in">
+          <!-- Back -->
+          <button onclick="goBack()" class="flex items-center gap-1 text-gray-400 hover:text-white mb-4 transition-colors">
+            ${icons.back}<span>Kembali</span>
+          </button>
+          
+          <!-- Drama Info -->
+          <div class="bg-dark-800 rounded-2xl overflow-hidden mb-6">
+            <div class="relative h-32 sm:h-48 overflow-hidden">
+              <img src="${cover}" class="w-full h-full object-cover blur-xl scale-110 opacity-30">
+              <div class="absolute inset-0 bg-gradient-to-b from-transparent via-dark-800/50 to-dark-800"></div>
+            </div>
+            
+            <div class="relative px-4 sm:px-6 pb-6 -mt-20 sm:-mt-24">
+              <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                <div class="w-28 sm:w-36 flex-shrink-0 mx-auto sm:mx-0">
+                  <div class="relative">
+                    <img src="${cover}" alt="${title}" class="w-full rounded-xl aspect-[2/3] object-cover shadow-2xl ring-2 ring-dark-600">
+                    ${drama?.score ? `
+                      <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-pink-600 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+                        ${icons.star}${drama.score}
+                      </div>` : ''}
                   </div>
                 </div>
                 
-                {/* Episode Grid */}
-                <div className="episode-grid">
-                  {episodes.map((ep, i) => (
-                    <button
-                      key={i}
-                      onClick={() => playEpisode(ep, ep.chapterIndex)}
-                      className={`episode-grid-btn ${currentEpisodeIndex === ep.chapterIndex ? 'active' : ''}`}
-                    >
-                      {i + 1}
+                <div class="flex-1 text-center sm:text-left pt-4 sm:pt-8">
+                  <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-3">${title}</h1>
+                  
+                  <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-sm text-gray-400 mb-4">
+                    ${drama?.chapterCount ? `
+                      <span class="flex items-center gap-1.5 bg-dark-700 px-3 py-1.5 rounded-full">
+                        ${icons.list}${drama.chapterCount} Episode
+                      </span>` : ''}
+                    ${drama?.playCount ? `
+                      <span class="flex items-center gap-1.5 bg-dark-700 px-3 py-1.5 rounded-full">
+                        ${icons.eye}${drama.playCount} views
+                      </span>` : ''}
+                  </div>
+                  
+                  ${tags.length > 0 ? `
+                    <div class="flex flex-wrap justify-center sm:justify-start gap-2 mb-4">
+                      ${tags.map(tag => `<span class="px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-full text-xs font-medium">${tag}</span>`).join('')}
+                    </div>` : ''}
+                  
+                  <p class="text-sm text-gray-400 line-clamp-3 mb-5">${desc || 'Tidak ada deskripsi tersedia.'}</p>
+                  
+                  <div class="flex flex-col sm:flex-row gap-3">
+                    <button onclick="state.episodes.length > 0 && playEpisode(state.episodes[0], 0)" 
+                            class="flex-1 sm:flex-none px-8 py-3.5 bg-gradient-to-r from-primary to-pink-600 hover:from-pink-600 hover:to-primary rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/25"
+                            ${state.episodes.length === 0 ? 'disabled' : ''}>
+                      ${icons.play} Tonton Sekarang
                     </button>
-                  ))}
+                    <button onclick="state.episodes.length > 0 && playEpisode(state.episodes[state.episodes.length - 1], state.episodes.length - 1)"
+                            class="flex-1 sm:flex-none px-6 py-3.5 bg-dark-600 hover:bg-dark-500 rounded-xl font-medium flex items-center justify-center gap-2 transition-all"
+                            ${state.episodes.length === 0 ? 'disabled' : ''}>
+                      ${icons.clock} Episode Terakhir
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           
-          {/* Mobile Episode Panel Overlay */}
-          <div 
-            className={`episode-panel-overlay lg:hidden ${showEpisodePanel ? 'open' : ''}`}
-            onClick={() => setShowEpisodePanel(false)}
-          />
+          <!-- Episodes -->
+          ${!state.loading && state.episodes.length > 0 ? `
+            <div class="bg-dark-800 rounded-2xl overflow-hidden">
+              <div class="bg-dark-700/50 px-4 py-3 flex items-center justify-between border-b border-dark-700">
+                <h3 class="font-semibold flex items-center gap-2">${icons.list} Pilih Episode</h3>
+                <span class="text-xs text-gray-400 bg-dark-600 px-3 py-1 rounded-full">Total ${state.episodes.length} Episode</span>
+              </div>
+              <div class="p-4">
+                <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
+                  ${state.episodes.map((ep, i) => `
+                    <button onclick="playEpisode(${JSON.stringify(ep).replace(/"/g, '&quot;')}, ${ep.chapterIndex})"
+                            class="episode-btn aspect-square text-sm ${state.currentEpisodeIndex === ep.chapterIndex ? 'active' : ''}">
+                      ${i + 1}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+            </div>` : ''}
           
-          {/* Mobile Episode Panel */}
-          <div className={`episode-panel lg:hidden ${showEpisodePanel ? 'open' : ''}`}>
-            <div className="episode-panel-header">
-              <span className="episode-panel-title">Daftar Episode</span>
-              <div className="episode-panel-close" onClick={() => setShowEpisodePanel(false)}>
-                <XIcon />
+          ${state.loading ? `
+            <div class="flex justify-center py-10">
+              <div class="loading-spinner"></div>
+            </div>` : ''}
+        </div>
+      `;
+    }
+    
+    function renderHeader() {
+      if (state.showVideo && state.isMobile) return '';
+      
+      return `
+        <header class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur border-b border-dark-700">
+          <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-14 md:h-16 gap-4">
+              <div onclick="setActiveTab('home')" class="flex items-center gap-2 cursor-pointer flex-shrink-0">
+                <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">${icons.play}</div>
+                <span class="text-lg font-bold hidden sm:block">DSeriesHub</span>
+              </div>
+              
+              <div class="flex-1 max-w-lg relative">
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">${icons.search}</span>
+                  <input type="text" 
+                         id="searchInput"
+                         value="${state.searchQuery}"
+                         oninput="handleSearchInput(this.value)"
+                         onkeypress="if(event.key==='Enter')handleSearch(this.value)"
+                         placeholder="Cari drama..." 
+                         class="w-full h-10 pl-10 pr-10 bg-dark-700 border border-dark-600 rounded-full text-sm focus:outline-none focus:border-primary transition-colors">
+                  ${state.searchQuery ? `
+                    <button onclick="state.searchQuery='';state.searchSuggestions=[];render()" 
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                      ${icons.x}
+                    </button>` : ''}
+                </div>
+                
+                ${state.showSuggestions && state.searchSuggestions.length > 0 ? `
+                  <div class="absolute top-full mt-2 w-full bg-dark-800 border border-dark-600 rounded-lg shadow-xl overflow-hidden z-50">
+                    ${state.searchSuggestions.slice(0, 6).map(s => `
+                      <div onclick="state.searchQuery='${s}';handleSearch('${s}');state.showSuggestions=false"
+                           class="px-4 py-2.5 hover:bg-dark-700 cursor-pointer text-sm flex items-center gap-2">
+                        ${icons.search}<span>${s}</span>
+                      </div>
+                    `).join('')}
+                  </div>` : ''}
               </div>
             </div>
             
-            <div className="episode-panel-content">
-              {/* Drama Info */}
-              <div className="episode-panel-drama-info">
-                <img src={getDramaCover(selectedDrama)} alt="" className="episode-panel-cover" />
-                <div>
-                  <div className="episode-panel-drama-title">{getDramaTitle(selectedDrama)}</div>
-                  <div className="episode-panel-drama-meta">
-                    {episodes.length} Episode • {selectedDrama?.score && `⭐ ${selectedDrama.score}`}
-                  </div>
-                </div>
+            <nav class="flex gap-1 overflow-x-auto hide-scrollbar -mb-px">
+              ${[
+                { id: 'home', label: 'Beranda', icon: icons.home },
+                { id: 'popular', label: 'Populer', icon: icons.trending },
+                { id: 'new', label: 'Terbaru', icon: icons.clock }
+              ].map(tab => `
+                <button onclick="setActiveTab('${tab.id}')"
+                        class="flex items-center gap-1.5 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                          state.activeTab === tab.id 
+                            ? 'border-primary text-primary' 
+                            : 'border-transparent text-gray-400 hover:text-white'
+                        }">
+                  ${tab.icon}<span>${tab.label}</span>
+                </button>
+              `).join('')}
+            </nav>
+          </div>
+        </header>
+      `;
+    }
+    
+    function renderFooter() {
+      if (state.showVideo) return '';
+      
+      return `
+        <footer class="border-t border-dark-700 py-6 mt-8">
+          <div class="max-w-7xl mx-auto px-4">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded bg-primary flex items-center justify-center">${icons.play}</div>
+                <span class="font-semibold text-white">DSeriesHub</span>
               </div>
-              
-              {/* Episode Grid */}
-              <div className="episode-grid">
-                {episodes.map((ep, i) => (
-                  <button
-                    key={i}
-                    onClick={() => playEpisode(ep, ep.chapterIndex)}
-                    className={`episode-grid-btn ${currentEpisodeIndex === ep.chapterIndex ? 'active' : ''}`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
+              <p>© 2025 DSeriesHub. All rights reserved.</p>
+              <div class="flex gap-4">
+                <span class="hover:text-white cursor-pointer">Terms</span>
+                <span class="hover:text-white cursor-pointer">Privacy</span>
               </div>
             </div>
           </div>
-        </div>
-      );
-
-      return (
-        <div className="min-h-screen bg-dark-900">
-          {/* Header - Hidden when video playing on mobile */}
-          {!(showVideo && isMobile) && (
-            <header className="sticky top-0 z-50 bg-dark-900/95 backdrop-blur border-b border-dark-700">
-              <div className="max-w-7xl mx-auto px-4">
-                <div className="flex items-center justify-between h-14 md:h-16 gap-4">
-                  <div
-                    onClick={() => { setActiveTab('home'); setPreviousTab('home'); setSelectedDrama(null); setShowVideo(false); }}
-                    className="flex items-center gap-2 cursor-pointer flex-shrink-0"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                      <PlayIcon />
-                    </div>
-                    <span className="text-lg font-bold hidden sm:block">DSeriesHub</span>
-                  </div>
-
-                  <div className="flex-1 max-w-lg relative">
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                        <SearchIcon />
-                      </span>
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => handleSearchInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
-                        onFocus={() => searchSuggestions.length > 0 && setShowSuggestions(true)}
-                        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                        placeholder="Cari drama..."
-                        className="w-full h-10 pl-10 pr-10 bg-dark-700 border border-dark-600 rounded-full text-sm focus:outline-none focus:border-primary transition-colors"
-                      />
-                      {searchQuery && (
-                        <button
-                          onClick={() => { setSearchQuery(''); setSuggestions([]); }}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
-                        >
-                          <XIcon />
-                        </button>
-                      )}
-                    </div>
-                    
-                    {showSuggestions && searchSuggestions.length > 0 && (
-                      <div className="absolute top-full mt-2 w-full bg-dark-800 border border-dark-600 rounded-lg shadow-xl overflow-hidden z-50">
-                        {searchSuggestions.slice(0, 6).map((s, i) => (
-                          <div
-                            key={i}
-                            onClick={() => { setSearchQuery(s); handleSearch(s); setShowSuggestions(false); }}
-                            className="px-4 py-2.5 hover:bg-dark-700 cursor-pointer text-sm flex items-center gap-2"
-                          >
-                            <SearchIcon />
-                            <span>{s}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <nav className="flex gap-1 overflow-x-auto hide-scrollbar -mb-px">
-                  {[
-                    { id: 'home', label: 'Beranda', icon: <HomeIcon /> },
-                    { id: 'popular', label: 'Populer', icon: <TrendingIcon /> },
-                    { id: 'new', label: 'Terbaru', icon: <ClockIcon /> }
-                  ].map(tab => (
-                    <button
-                      key={tab.id}
-                      onClick={() => { setActiveTab(tab.id); setPreviousTab(tab.id); setSelectedDrama(null); setShowVideo(false); }}
-                      className={`flex items-center gap-1.5 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
-                        activeTab === tab.id 
-                          ? 'border-primary text-primary' 
-                          : 'border-transparent text-gray-400 hover:text-white'
-                      }`}
-                    >
-                      {tab.icon}
-                      <span>{tab.label}</span>
-                    </button>
-                  ))}
-                </nav>
-              </div>
-            </header>
-          )}
-
-          {/* Main Content */}
-          <main className={`max-w-7xl mx-auto ${showVideo ? 'px-0 lg:px-4 py-0 lg:py-6' : 'px-4 py-6'}`}>
-            {error && !showVideo && (
-              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm fade-in">
-                {error}
-              </div>
-            )}
-
-            {loading && !selectedDrama && <Skeleton />}
-
-            {/* Home */}
-            {activeTab === 'home' && !loading && !selectedDrama && (
-              <div className="fade-in">
-                {recommendations.length > 0 && (
-                  <Section title="Rekomendasi" icon={<StarIcon />}>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
-                      {recommendations.slice(0, 16).map((d, i) => <DramaCard key={i} drama={d} />)}
-                    </div>
-                  </Section>
-                )}
-
-                {newReleases.length > 0 && (
-                  <Section title="Terbaru" icon={<ClockIcon />} viewAll={() => setActiveTab('new')}>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
-                      {newReleases.slice(0, 16).map((d, i) => <DramaCard key={i} drama={d} />)}
-                    </div>
-                  </Section>
-                )}
-
-                {popularDramas.length > 0 && (
-                  <Section title="Populer" icon={<TrendingIcon />} viewAll={() => setActiveTab('popular')}>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
-                      {popularDramas.slice(0, 16).map((d, i) => <DramaCard key={i} drama={d} rank={i} />)}
-                    </div>
-                  </Section>
-                )}
-              </div>
-            )}
-
-            {/* Popular */}
-            {activeTab === 'popular' && !loading && !selectedDrama && (
-              <div className="fade-in">
-                <Section title="Drama Populer" icon={<TrendingIcon />}>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
-                    {popularDramas.map((d, i) => <DramaCard key={i} drama={d} rank={i} />)}
-                  </div>
-                </Section>
-              </div>
-            )}
-
-            {/* New */}
-            {activeTab === 'new' && !loading && !selectedDrama && (
-              <div className="fade-in">
-                <Section title="Drama Terbaru" icon={<ClockIcon />}>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
-                    {newReleases.map((d, i) => <DramaCard key={i} drama={d} />)}
-                  </div>
-                </Section>
-              </div>
-            )}
-
-            {/* Search Results */}
-            {activeTab === 'search' && !loading && !selectedDrama && (
-              <div className="fade-in">
-                <Section title={`Hasil: "${searchQuery}"`} icon={<SearchIcon />}>
-                  {searchResults.length > 0 ? (
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
-                      {searchResults.map((d, i) => <DramaCard key={i} drama={d} />)}
-                    </div>
-                  ) : (
-                    <div className="text-center py-16 text-gray-500">
-                      <SearchIcon />
-                      <p className="mt-2">Tidak ada hasil</p>
-                    </div>
-                  )}
-                </Section>
-              </div>
-            )}
-
-            {/* Detail Page */}
-            {activeTab === 'detail' && selectedDrama && (
-              <div className="fade-in">
-                {/* Video Player - FPlayer Style */}
-                {showVideo && videoUrl ? (
-                  <FPlayerVideoPlayer />
-                ) : (
-                  <>
-                    {/* Back Button */}
-                    <button onClick={goBack} className="flex items-center gap-1 text-gray-400 hover:text-white mb-4 transition-colors">
-                      <BackIcon />
-                      <span>Kembali</span>
-                    </button>
-
-                    {/* Drama Info */}
-                    <div className="bg-dark-800 rounded-2xl overflow-hidden mb-6 fade-in">
-                      <div className="relative h-32 sm:h-48 overflow-hidden">
-                        <img
-                          src={getDramaCover(selectedDrama)}
-                          alt=""
-                          className="w-full h-full object-cover blur-xl scale-110 opacity-30"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-dark-800/50 to-dark-800"></div>
-                      </div>
-                      
-                      <div className="relative px-4 sm:px-6 pb-6 -mt-20 sm:-mt-24">
-                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                          <div className="w-28 sm:w-36 flex-shrink-0 mx-auto sm:mx-0">
-                            <div className="relative">
-                              <img
-                                src={getDramaCover(selectedDrama)}
-                                alt={getDramaTitle(selectedDrama)}
-                                className="w-full rounded-xl aspect-[2/3] object-cover shadow-2xl ring-2 ring-dark-600"
-                              />
-                              {selectedDrama?.score && (
-                                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-pink-600 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
-                                  <StarIcon />
-                                  {selectedDrama.score}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="flex-1 text-center sm:text-left pt-4 sm:pt-8">
-                            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 leading-tight">
-                              {getDramaTitle(selectedDrama)}
-                            </h1>
-
-                            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-sm text-gray-400 mb-4">
-                              {selectedDrama?.chapterCount && (
-                                <span className="flex items-center gap-1.5 bg-dark-700 px-3 py-1.5 rounded-full">
-                                  <ListIcon />
-                                  {selectedDrama.chapterCount} Episode
-                                </span>
-                              )}
-                              {selectedDrama?.playCount && (
-                                <span className="flex items-center gap-1.5 bg-dark-700 px-3 py-1.5 rounded-full">
-                                  <EyeIcon />
-                                  {selectedDrama.playCount} views
-                                </span>
-                              )}
-                            </div>
-
-                            {getDramaTags(selectedDrama).length > 0 && (
-                              <div className="flex flex-wrap justify-center sm:justify-start gap-2 mb-4">
-                                {getDramaTags(selectedDrama).map((tag, i) => (
-                                  <span key={i} className="px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-full text-xs font-medium">
-                                    {tag}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
-
-                            <p className="text-sm text-gray-400 line-clamp-3 mb-5 leading-relaxed">
-                              {getDramaDesc(selectedDrama) || 'Tidak ada deskripsi tersedia untuk drama ini.'}
-                            </p>
-
-                            <div className="flex flex-col sm:flex-row gap-3">
-                              <button
-                                onClick={() => episodes.length > 0 && playEpisode(episodes[0], 0)}
-                                disabled={episodes.length === 0 || loading}
-                                className="flex-1 sm:flex-none px-8 py-3.5 bg-gradient-to-r from-primary to-pink-600 hover:from-pink-600 hover:to-primary rounded-xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50 shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.02]"
-                              >
-                                <PlayIcon />
-                                Tonton Sekarang
-                              </button>
-                              <button
-                                onClick={() => episodes.length > 0 && playEpisode(episodes[episodes.length - 1], episodes.length - 1)}
-                                disabled={episodes.length === 0 || loading}
-                                className="flex-1 sm:flex-none px-6 py-3.5 bg-dark-600 hover:bg-dark-500 rounded-xl font-medium flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-                              >
-                                <ClockIcon />
-                                Episode Terakhir
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Episodes Grid */}
-                    {!loading && episodes.length > 0 && (
-                      <div className="bg-dark-800 rounded-2xl overflow-hidden fade-in">
-                        <div className="bg-dark-700/50 px-4 py-3 flex items-center justify-between border-b border-dark-700">
-                          <h3 className="font-semibold flex items-center gap-2">
-                            <ListIcon />
-                            Pilih Episode
-                          </h3>
-                          <span className="text-xs text-gray-400 bg-dark-600 px-3 py-1 rounded-full">Total {episodes.length} Episode</span>
-                        </div>
-                        
-                        <div className="p-4">
-                          <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 xl:grid-cols-14 gap-2">
-                            {episodes.map((ep, i) => (
-                              <button
-                                key={i}
-                                onClick={() => playEpisode(ep, ep.chapterIndex)}
-                                className={`ep-btn aspect-square text-sm ${
-                                  currentEpisodeIndex === ep.chapterIndex
-                                    ? 'active text-white'
-                                    : 'bg-dark-600 hover:bg-dark-500 text-gray-300'
-                                }`}
-                              >
-                                {i + 1}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {loading && (
-                      <div className="flex justify-center py-10">
-                        <div className="loading-spinner" />
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-          </main>
-
-          {/* Footer - Hidden when video playing */}
-          {!showVideo && (
-            <footer className="border-t border-dark-700 py-6 mt-8">
-              <div className="max-w-7xl mx-auto px-4">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded bg-primary flex items-center justify-center">
-                      <PlayIcon size={14} />
-                    </div>
-                    <span className="font-semibold text-white">DSeriesHub</span>
-                  </div>
-                  <p>© 2025 DSeriesHub. All rights reserved.</p>
-                  <div className="flex gap-4">
-                    <span className="hover:text-white cursor-pointer">Terms</span>
-                    <span className="hover:text-white cursor-pointer">Privacy</span>
-                  </div>
-                </div>
-              </div>
-            </footer>
-          )}
-        </div>
-      );
-    };
+        </footer>
+      `;
+    }
     
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    function renderContent() {
+      if (state.error && !state.showVideo) {
+        return `
+          <div class="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm fade-in">
+            ${state.error}
+          </div>
+        `;
+      }
+      
+      if (state.loading && !state.selectedDrama) {
+        return renderSkeleton();
+      }
+      
+      if (state.activeTab === 'detail' && state.selectedDrama) {
+        return renderDetailPage();
+      }
+      
+      if (state.activeTab === 'home' && !state.loading) {
+        let html = '<div class="fade-in">';
+        if (state.recommendations.length > 0) {
+          html += renderSection('Rekomendasi', icons.star, state.recommendations.slice(0, 16));
+        }
+        if (state.newReleases.length > 0) {
+          html += renderSection('Terbaru', icons.clock, state.newReleases.slice(0, 16));
+        }
+        if (state.popularDramas.length > 0) {
+          html += renderSection('Populer', icons.trending, state.popularDramas.slice(0, 16), true);
+        }
+        html += '</div>';
+        return html;
+      }
+      
+      if (state.activeTab === 'popular' && !state.loading) {
+        return `<div class="fade-in">${renderSection('Drama Populer', icons.trending, state.popularDramas, true)}</div>`;
+      }
+      
+      if (state.activeTab === 'new' && !state.loading) {
+        return `<div class="fade-in">${renderSection('Drama Terbaru', icons.clock, state.newReleases)}</div>`;
+      }
+      
+      if (state.activeTab === 'search' && !state.loading) {
+        if (state.searchResults.length > 0) {
+          return `<div class="fade-in">${renderSection(`Hasil: "${state.searchQuery}"`, icons.search, state.searchResults)}</div>`;
+        } else {
+          return `
+            <div class="text-center py-16 text-gray-500 fade-in">
+              ${icons.search}
+              <p class="mt-2">Tidak ada hasil</p>
+            </div>
+          `;
+        }
+      }
+      
+      return '';
+    }
+    
+    function render() {
+      const app = document.getElementById('app');
+      app.innerHTML = `
+        <div class="min-h-screen bg-dark-900">
+          ${renderHeader()}
+          <main class="max-w-7xl mx-auto ${state.showVideo ? 'px-0 lg:px-4 py-0 lg:py-6' : 'px-4 py-6'}">
+            ${renderContent()}
+          </main>
+          ${renderFooter()}
+        </div>
+      `;
+      
+      // Setup video event listeners if video is playing
+      if (state.showVideo && state.videoUrl) {
+        setupVideoListeners();
+      }
+    }
+    
+    function setupVideoListeners() {
+      const video = document.getElementById('mainVideo');
+      const centerPlayBtn = document.getElementById('centerPlayBtn');
+      const progressBar = document.getElementById('progressBar');
+      const timeDisplay = document.getElementById('timeDisplay');
+      const progressContainer = document.getElementById('progressContainer');
+      
+      if (!video) return;
+      
+      video.addEventListener('timeupdate', () => {
+        const current = video.currentTime;
+        const duration = video.duration || 0;
+        const percent = duration ? (current / duration) * 100 : 0;
+        if (progressBar) progressBar.style.width = percent + '%';
+        if (timeDisplay) timeDisplay.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+      });
+      
+      video.addEventListener('play', () => {
+        state.isPlaying = true;
+        if (centerPlayBtn) centerPlayBtn.style.display = 'none';
+      });
+      
+      video.addEventListener('pause', () => {
+        state.isPlaying = false;
+        if (centerPlayBtn) centerPlayBtn.style.display = 'flex';
+      });
+      
+      video.addEventListener('ended', () => {
+        playNextEpisode();
+      });
+      
+      video.addEventListener('error', () => {
+        state.error = 'Gagal memutar video';
+        render();
+      });
+      
+      if (progressContainer) {
+        progressContainer.addEventListener('click', (e) => {
+          const rect = progressContainer.getBoundingClientRect();
+          const pos = (e.clientX - rect.left) / rect.width;
+          if (video.duration) {
+            video.currentTime = pos * video.duration;
+          }
+        });
+      }
+    }
+    
+    function togglePlay() {
+      const video = document.getElementById('mainVideo');
+      if (video) {
+        if (state.isPlaying) {
+          video.pause();
+        } else {
+          video.play();
+        }
+      }
+    }
+    
+    function toggleEpisodePanel() {
+      state.showEpisodePanel = !state.showEpisodePanel;
+      render();
+    }
+    
+    // Handle resize
+    window.addEventListener('resize', () => {
+      const wasMobile = state.isMobile;
+      state.isMobile = window.innerWidth < 1024;
+      if (wasMobile !== state.isMobile) {
+        render();
+      }
+    });
+    
+    // Initialize
+    loadHomeData();
   </script>
 </body>
 </html>

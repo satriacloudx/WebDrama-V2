@@ -121,8 +121,8 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: 120px;
-      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+      height: 200px;
+      background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.7) 40%, transparent);
     }
     
     .video-back-btn {
@@ -150,7 +150,7 @@
     .video-actions {
       position: absolute;
       right: 12px;
-      bottom: 100px;
+      bottom: 220px;
       z-index: 20;
       display: flex;
       flex-direction: column;
@@ -189,13 +189,55 @@
       color: rgba(255,255,255,0.8);
     }
     
-    .video-info {
+    .video-controls-bottom {
       position: absolute;
-      bottom: 16px;
-      left: 16px;
-      right: 70px;
-      z-index: 20;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 25;
+      padding: 16px;
+      padding-right: 70px;
       pointer-events: auto;
+    }
+    
+    .video-progress {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    
+    .video-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #ec4899, #f472b6);
+      border-radius: 3px;
+      position: relative;
+    }
+    
+    .video-progress-bar::after {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    
+    .video-time {
+      font-size: 11px;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    
+    .video-info {
+      margin-bottom: 12px;
     }
     
     .video-title {
@@ -203,12 +245,12 @@
       font-weight: 700;
       margin-bottom: 4px;
       text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      line-height: 1.3;
     }
     
     .video-subtitle {
       font-size: 12px;
       color: rgba(255,255,255,0.7);
-      margin-bottom: 12px;
     }
     
     .video-nav-btns {
@@ -220,12 +262,12 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      padding: 8px 16px;
+      padding: 10px 20px;
       background: rgba(255,255,255,0.15);
       backdrop-filter: blur(10px);
-      border-radius: 20px;
+      border-radius: 25px;
       border: 1px solid rgba(255,255,255,0.2);
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
       color: #fff;
       cursor: pointer;
@@ -252,8 +294,8 @@
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 15;
-      width: 64px;
-      height: 64px;
+      width: 70px;
+      height: 70px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -261,39 +303,13 @@
       border-radius: 50%;
       cursor: pointer;
       pointer-events: auto;
-      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.5);
+      box-shadow: 0 4px 25px rgba(236, 72, 153, 0.6);
+      transition: all 0.2s;
     }
     
     .video-center-play:hover {
       transform: translate(-50%, -50%) scale(1.1);
-    }
-    
-    .video-progress {
-      position: absolute;
-      bottom: 70px;
-      left: 16px;
-      right: 70px;
-      z-index: 20;
-      height: 4px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 2px;
-      cursor: pointer;
-      pointer-events: auto;
-    }
-    
-    .video-progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #ec4899, #f472b6);
-      border-radius: 2px;
-    }
-    
-    .video-time {
-      position: absolute;
-      bottom: 78px;
-      left: 16px;
-      z-index: 20;
-      font-size: 10px;
-      color: rgba(255,255,255,0.7);
+      box-shadow: 0 6px 30px rgba(236, 72, 153, 0.8);
     }
     
     /* Episode Panel */
@@ -460,6 +476,7 @@
       search: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>`,
       play: `<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`,
       playLarge: `<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`,
+      pause: `<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>`,
       home: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>`,
       trending: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
       clock: `<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
@@ -780,18 +797,23 @@
                       </div>
                     </div>
                     
-                    <!-- Progress Bar -->
-                    <div class="video-progress" id="progressContainer">
-                      <div class="video-progress-bar" id="progressBar" style="width: 0%"></div>
-                    </div>
-                    
-                    <!-- Time -->
-                    <div class="video-time" id="timeDisplay">0:00 / 0:00</div>
-                    
-                    <!-- Info -->
-                    <div class="video-info">
-                      <div class="video-title">${getDramaTitle(drama)}</div>
-                      <div class="video-subtitle">Episode ${ep + 1} dari ${total}</div>
+                    <!-- Bottom Controls Container -->
+                    <div class="video-controls-bottom">
+                      <!-- Progress Bar -->
+                      <div class="video-progress" id="progressContainer">
+                        <div class="video-progress-bar" id="progressBar" style="width: 0%"></div>
+                      </div>
+                      
+                      <!-- Time -->
+                      <div class="video-time" id="timeDisplay">0:00 / 0:00</div>
+                      
+                      <!-- Info -->
+                      <div class="video-info">
+                        <div class="video-title">${getDramaTitle(drama)}</div>
+                        <div class="video-subtitle">Episode ${ep + 1} dari ${total}</div>
+                      </div>
+                      
+                      <!-- Navigation Buttons -->
                       <div class="video-nav-btns">
                         <button class="video-nav-btn" onclick="playPrevEpisode()" ${ep === 0 ? 'disabled' : ''}>
                           ${icons.chevronLeft} Prev
